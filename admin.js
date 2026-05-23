@@ -149,6 +149,8 @@ async function editArticle(id) {
   document.getElementById('fImage').value = a.image_url || '';
   document.getElementById('fExcerpt').value = a.excerpt || '';
   document.getElementById('fContent').value = a.content;
+  document.getElementById('fDate').value = a.news_date || '';
+  document.getElementById('fLocation').value = a.location || '';
   document.getElementById('formTitle').textContent = 'Edit Article';
   document.getElementById('saveLabel').textContent = 'Save Changes';
 
