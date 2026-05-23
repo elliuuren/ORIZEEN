@@ -41,6 +41,8 @@ function resetForm() {
   document.getElementById('fContent').value = '';
   document.getElementById('formTitle').textContent = 'Publish New Article';
   document.getElementById('saveLabel').textContent = 'Publish Article';
+  document.getElementById('fDate').value = '';
+  document.getElementById('fLocation').value = '';
 }
 
 async function saveArticle() {
