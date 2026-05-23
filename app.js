@@ -46,11 +46,7 @@ async function loadHero() {
   const data = await fetchArticles(0, 1, currentCat);
   if (!data || data.length === 0) return;
   const a = data[0];
-  const heroBg = document.getElementById('heroBg');
   const heroContent = document.getElementById('heroContent');
-  if (heroBg && a.image_url) {
-    heroBg.style.backgroundImage = `url('${a.image_url}')`;
-  }
   if (heroContent) {
     heroContent.innerHTML = `
       ${badge(a.category)}
