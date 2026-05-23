@@ -168,3 +168,34 @@ async function deleteArticle(id) {
     loadAdminList();
   }
 }
+
+// === CUSTOM CATEGORY SELECT ===
+const selectEl = document.getElementById('categorySelect');
+const triggerEl = document.getElementById('categoryTrigger');
+const dropdownEl = document.getElementById('categoryDropdown');
+const badgeEl = document.getElementById('categoryBadge');
+const hiddenInput = document.getElementById('fCategory');
+
+triggerEl.addEventListener('click', () => {
+  selectEl.classList.toggle('open');
+});
+
+document.addEventListener('click', e => {
+  if (!selectEl.contains(e.target)) {
+    selectEl.classList.remove('open');
+  }
+});
+
+document.querySelectorAll('.custom-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    const val = opt.dataset.value;
+    hiddenInput.value = val;
+    badgeEl.textContent = val;
+    badgeEl.className = `category-badge ${val.toLowerCase()}`;
+    document.querySelectorAll('.custom-option').forEach(o =>
+      o.classList.remove('selected')
+    );
+    opt.classList.add('selected');
+    selectEl.classList.remove('open');
+  });
+});
