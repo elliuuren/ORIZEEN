@@ -205,3 +205,108 @@ document.querySelectorAll('.custom-option').forEach(opt => {
     selectEl.classList.remove('open');
   });
 });
+
+// === SUBMISSIONS ===
+async function loadSubmissions() {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/submissions?select=*&order=created_at.desc`,
+    {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    }
+  );
+  const data = await res.json();
+  const list = document.getElementById('submissionsList');
+  if (!list) return;
+
+  if (!data || data.length === 0) {
+    list.innerHTML = '<p style="color:rgba(255,255,255,0.4)">No submissions yet.</p>';
+    return;
+  }
+
+  list.innerHTML = data.map(s => `
+    <div class="admin-list-item submission-item">
+      <div class="admin-list-info" style="flex-direction:column;align-items:flex-start;gap:0.4rem">
+        <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap">
+          <span class="admin-list-cat ${s.category.toLowerCase()}">${s.category}</span>
+          <span class="sub-status sub-${s.status}">${s.status.toUpperCase()}</span>
+          ${s.location ? `<span style="font-size:0.72rem;color:rgba(255,255,255,0.35)">📍 ${s.location}</span>` : ''}
+        </div>
+        <span class="admin-list-title">${s.title}</span>
+        <span style="font-size:0.78rem;color:rgba(255,255,255,0.45);line-height:1.5">${s.content.substring(0, 180)}...</span>
+        <span style="font-size:0.72rem;color:rgba(29,185,84,0.7)">📞 ${s.contact}</span>
+        <span class="admin-list-date">${new Date(s.created_at).toLocaleDateString()}</span>
+      </div>
+      <div class="admin-list-actions" style="flex-direction:column;gap:0.5rem">
+        ${s.status === 'pending' ? `
+          <button class="admin-btn green small" onclick="approveSubmission(${s.id}, '${s.title.replace(/'/g,"\\'")}', '${s.category}', '${s.location || ''}', \`${s.content.replace(/`/g,'\\`')}\`)">
+            Approve
+          </button>
+          <button class="admin-btn red small" onclick="rejectSubmission(${s.id})">
+            Reject
+          </button>
+        ` : `<span style="font-size:0.75rem;color:rgba(255,255,255,0.3)">${s.status}</span>`}
+      </div>
+    </div>
+  `).join('');
+}
+
+async function approveSubmission(id, title, category, location, content) {
+  // Publish as article
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/articles`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal'
+    },
+    body: JSON.stringify({
+      title, category, location, content,
+      author: 'Community Contributor',
+      published: true
+    })
+  });
+
+  if (res.ok) {
+    // Mark submission as approved
+    await fetch(`${SUPABASE_URL}/rest/v1/submissions?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ status: 'approved' })
+    });
+    alert('Submission approved and published!');
+    loadSubmissions();
+    loadAdminList();
+  }
+}
+
+async function rejectSubmission(id) {
+  if (!confirm('Reject this submission?')) return;
+  await fetch(`${SUPABASE_URL}/rest/v1/submissions?id=eq.${id}`, {
+    method: 'PATCH',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ status: 'rejected' })
+  });
+  loadSubmissions();
+}
+
+// Load submissions when admin panel opens
+const origLoadAdminList = loadAdminList;
+document.addEventListener('DOMContentLoaded', () => {
+  const panel = document.getElementById('adminPanel');
+  const observer = new MutationObserver(() => {
+    if (panel.style.display !== 'none') loadSubmissions();
+  });
+  observer.observe(panel, { attributes: true, attributeFilter: ['style'] });
+});
