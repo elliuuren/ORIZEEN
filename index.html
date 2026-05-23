@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ORIZEEN Times</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-main">ORIZEEN</span>
+        <span class="logo-sub">Times</span>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="#" data-cat="BREAKING">Breaking</a>
+        <a href="#" data-cat="WORLD">World</a>
+        <a href="#" data-cat="POLITICS">Politics</a>
+        <a href="#" data-cat="TECH">Tech</a>
+        <a href="#" data-cat="BUSINESS">Business</a>
+        <a href="#" data-cat="SPORTS">Sports</a>
+      </nav>
+      <span class="live-date" id="liveDate"></span>
+    </div>
+    <div class="ticker-bar">
+      <span class="ticker-label">LATEST</span>
+      <div class="ticker-wrap">
+        <div class="ticker-track" id="tickerTrack">Loading...</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content" id="heroContent">
+      <div class="skeleton-hero"></div>
+    </div>
+  </section>
+
+  <!-- ARTICLES -->
+  <main class="articles-section">
+    <div class="section-header">
+      <h2 id="sectionTitle">Latest Stories</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="articles-grid" id="articlesGrid">
+      <!-- Loaded by JS -->
+    </div>
+    <div class="load-more-wrap">
+      <button class="load-more-btn" id="loadMoreBtn" style="display:none">
+        Load More
+      </button>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="logo">
+        <span class="logo-main">ORIZEEN</span>
+        <span class="logo-sub">Times</span>
+      </div>
+      <p class="footer-tag">Editorial. Cinematic. Premium.</p>
+      <nav class="footer-nav">
+        <a href="index.html">Home</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+      <p class="footer-copy">© ORIZEEN Times <span id="footerYear"></span>. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
