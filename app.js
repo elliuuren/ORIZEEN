@@ -90,7 +90,8 @@ function renderCard(a) {
         <p class="card-excerpt">${a.excerpt || ''}</p>
         <div class="card-meta">
           <span>${a.author || 'ORIZEEN Staff'}</span>
-          <span>${fmtDate(a.created_at)}</span>
+          ${a.location ? `<span>📍 ${a.location}</span>` : ''}
+          <span>${a.news_date ? fmtDate(a.news_date) : fmtDate(a.created_at)}</span>
         </div>
       </div>
     </article>
