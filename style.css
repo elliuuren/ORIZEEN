@@ -635,3 +635,56 @@ option { background: #1a1a1a; }
 .custom-option.selected {
   background: rgba(29,185,84,0.07);
 }
+
+/* === SUBMIT PAGE === */
+.submit-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+.submit-wrap { display: flex; flex-direction: column; gap: 2rem; }
+.submit-header { text-align: center; }
+.submit-title {
+  font-family: var(--font-display);
+  font-size: 2.5rem; font-weight: 900;
+  margin: 0.75rem 0 0.5rem;
+}
+.submit-sub {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.5);
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+.field-note {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.3);
+  margin-top: 0.4rem;
+}
+.submit-success {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(29,185,84,0.05);
+  border: 1px solid rgba(29,185,84,0.2);
+  border-radius: 14px;
+}
+.success-icon { font-size: 3rem; margin-bottom: 1rem; }
+.submit-success h2 {
+  font-family: var(--font-display);
+  font-size: 1.8rem; margin-bottom: 0.75rem;
+}
+.submit-success p { color: rgba(255,255,255,0.55); }
+
+/* === SUBMISSION STATUS === */
+.sub-status {
+  font-size: 0.6rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.15rem 0.6rem; border-radius: 999px;
+}
+.sub-pending { background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid var(--gold); }
+.sub-approved { background: rgba(29,185,84,0.15); color: var(--green); border: 1px solid var(--green); }
+.sub-rejected { background: rgba(192,57,43,0.15); color: var(--red); border: 1px solid var(--red); }
+
+[data-theme="light"] .submit-sub { color: rgba(0,0,0,0.5); }
+[data-theme="light"] .field-note { color: rgba(0,0,0,0.3); }
+[data-theme="light"] .submit-success p { color: rgba(0,0,0,0.5); }
