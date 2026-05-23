@@ -57,7 +57,9 @@ async function saveArticle() {
     return;
   }
 
-  const payload = { title, category, author, image_url, excerpt, content, published: true };
+  const news_date = document.getElementById('fDate').value;
+  const location = document.getElementById('fLocation').value.trim();
+  const payload = { title, category, author, image_url, excerpt, content, news_date, location, published: true };
   const headers = {
     'apikey': SUPABASE_KEY,
     'Authorization': `Bearer ${SUPABASE_KEY}`,
