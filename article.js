@@ -71,9 +71,10 @@ async function loadArticle() {
       ${badge(a.category)}
       <h1 class="post-title">${a.title}</h1>
       <div class="post-meta">
-        <span>By ${a.author || 'ORIZEEN Staff'}</span>
-        <span>${fmtDate(a.created_at)}</span>
-      </div>
+          <span>By ${a.author || 'ORIZEEN Staff'}</span>
+          ${a.location ? `<span>📍 ${a.location}</span>` : ''}
+          <span>${a.news_date ? fmtDate(a.news_date) : fmtDate(a.created_at)}</span>
+        </div>
     </div>`}
     <div class="post-body-wrap">
       <div class="post-body">${bodyHtml}</div>
