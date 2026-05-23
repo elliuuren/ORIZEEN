@@ -100,14 +100,7 @@ img { width: 100%; display: block; object-fit: cover; }
   min-height: 520px; position: relative;
   overflow: hidden;
 }
-.hero-bg {
-  position: absolute; inset: 0;
-  background-size: cover; background-position: center;
-  transform: scale(1.05);
-  transition: transform 8s ease;
-  filter: blur(0px);
-}
-.hero:hover .hero-bg { transform: scale(1); }
+/* hero-bg removed */
 .hero-overlay {
   position: absolute; inset: 0;
   background: linear-gradient(
