@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — ORIZEEN Times</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+
+  <!-- LOGIN SCREEN -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <div class="logo" style="justify-content:center;display:flex;margin-bottom:2rem">
+        <span class="logo-main">ORIZEEN</span>
+        <span class="logo-sub">Times</span>
+      </div>
+      <h2 class="login-title">Admin Access</h2>
+      <input type="password" id="adminPass" class="admin-input" placeholder="Enter admin password"/>
+      <button class="admin-btn green" onclick="checkLogin()">Enter</button>
+      <p class="login-error" id="loginError"></p>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div class="admin-panel" id="adminPanel" style="display:none">
+    <header class="admin-header">
+      <div class="logo">
+        <span class="logo-main">ORIZEEN</span>
+        <span class="logo-sub">Times</span>
+      </div>
+      <span class="admin-badge">Control Panel</span>
+      <button class="admin-btn red small" onclick="logout()">Logout</button>
+    </header>
+
+    <div class="admin-inner">
+
+      <!-- ADD / EDIT FORM -->
+      <section class="admin-card">
+        <h3 id="formTitle">Publish New Article</h3>
+        <input type="hidden" id="editId"/>
+        <div class="form-group">
+          <label>Headline *</label>
+          <input type="text" id="fTitle" class="admin-input" placeholder="Article headline"/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Category *</label>
+            <select id="fCategory" class="admin-input">
+              <option>BREAKING</option>
+              <option>WORLD</option>
+              <option>POLITICS</option>
+              <option>TECH</option>
+              <option>BUSINESS</option>
+              <option>SPORTS</option>
+              <option>CULTURE</option>
+              <option>SCIENCE</option>
+              <option>OPINION</option>
+              <option>EXCLUSIVE</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Author</label>
+            <input type="text" id="fAuthor" class="admin-input" placeholder="Reporter name"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Image URL</label>
+          <input type="text" id="fImage" class="admin-input" placeholder="https://... (paste image link)"/>
+        </div>
+        <div class="form-group">
+          <label>Excerpt (short summary)</label>
+          <textarea id="fExcerpt" class="admin-input" rows="2" placeholder="2-3 sentence summary shown on homepage"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Full Article Content *</label>
+          <textarea id="fContent" class="admin-input" rows="10" placeholder="Write full article here. Use double line break for new paragraph."></textarea>
+        </div>
+        <div class="form-actions">
+          <button class="admin-btn green" onclick="saveArticle()">
+            <span id="saveLabel">Publish Article</span>
+          </button>
+          <button class="admin-btn ghost" onclick="resetForm()">Clear</button>
+        </div>
+        <p class="form-msg" id="formMsg"></p>
+      </section>
+
+      <!-- ARTICLES LIST -->
+      <section class="admin-card">
+        <h3>All Articles</h3>
+        <div id="adminList" class="admin-list">
+          Loading...
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
