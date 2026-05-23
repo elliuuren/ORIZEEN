@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Share News — ORIZEEN Times</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-main">ORIZEEN</span>
+        <span class="logo-sub">Times</span>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html">← Back to Home</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
+    </div>
+  </header>
+
+  <main class="submit-page">
+    <div class="submit-wrap">
+      <div class="submit-header">
+        <span class="category-badge world">COMMUNITY</span>
+        <h1 class="submit-title">Share a News Tip</h1>
+        <p class="submit-sub">Have a story worth telling? Submit it to ORIZEEN Times. Our team will review and may publish it.</p>
+      </div>
+
+      <div class="admin-card" id="submitForm">
+        <div class="form-group">
+          <label>Headline *</label>
+          <input type="text" id="sTitle" class="admin-input" placeholder="What's the news?"/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Category</label>
+            <select id="sCategory" class="admin-input">
+              <option>BREAKING</option>
+              <option>WORLD</option>
+              <option>POLITICS</option>
+              <option>TECH</option>
+              <option>BUSINESS</option>
+              <option>SPORTS</option>
+              <option>CULTURE</option>
+              <option>SCIENCE</option>
+              <option>OPINION</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" id="sLocation" class="admin-input" placeholder="City, Country"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Your Story *</label>
+          <textarea id="sContent" class="admin-input" rows="8" placeholder="Write the full news story here..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Your Contact (Email or Phone) *</label>
+          <input type="text" id="sContact" class="admin-input" placeholder="email@example.com or +1234567890"/>
+          <p class="field-note">Required for us to reach you. Will never be published.</p>
+        </div>
+        <button class="admin-btn green" onclick="submitNews()" style="width:100%">
+          Submit Story
+        </button>
+        <p class="form-msg" id="submitMsg"></p>
+      </div>
+
+      <div class="submit-success" id="submitSuccess" style="display:none">
+        <div class="success-icon">✅</div>
+        <h2>Submitted Successfully!</h2>
+        <p>Thank you for sharing. Our team will review your story and contact you if it gets published.</p>
+        <a href="index.html" class="admin-btn green" style="display:inline-block;margin-top:1.5rem">
+          Back to Home
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="theme.js"></script>
+  <script src="submit.js"></script>
+</body>
+</html>
