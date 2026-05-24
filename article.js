@@ -55,28 +55,21 @@ async function loadArticle() {
     .join('');
 
   document.getElementById('postArticle').innerHTML = `
-    ${a.image_url ? `
-    <div class="post-hero" style="background-image:url('${a.image_url}')">
-      <div class="post-hero-overlay"></div>
-      <div class="post-hero-content">
+    <div class="post-body-wrap">
+      ${a.image_url ? `
+      <div class="post-hero">
+        <img src="${a.image_url}" alt="${a.title}"/>
+      </div>` : ''}
+      <div class="post-header">
         ${badge(a.category)}
         <h1 class="post-title">${a.title}</h1>
         <div class="post-meta">
           <span>By ${a.author || 'ORIZEEN Staff'}</span>
-          <span>${fmtDate(a.created_at)}</span>
-        </div>
-      </div>
-    </div>` : `
-    <div class="post-no-hero">
-      ${badge(a.category)}
-      <h1 class="post-title">${a.title}</h1>
-      <div class="post-meta">
-          <span>By ${a.author || 'ORIZEEN Staff'}</span>
           ${a.location ? `<span>📍 ${a.location}</span>` : ''}
           <span>${a.news_date ? fmtDate(a.news_date) : fmtDate(a.created_at)}</span>
         </div>
-    </div>`}
-    <div class="post-body-wrap">
+        <div class="post-divider"></div>
+      </div>
       <div class="post-body">${bodyHtml}</div>
       <a href="index.html" class="back-link">← Back to Homepage</a>
     </div>
