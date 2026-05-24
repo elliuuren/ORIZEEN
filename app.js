@@ -41,25 +41,32 @@ function fmtDate(iso) {
   });
 }
 
-// --- LOAD HERO (first article) ---
+// --- LOAD FEATURED PHOTOCARD ---
 async function loadHero() {
   const data = await fetchArticles(0, 1, currentCat);
-  if (!data || data.length === 0) return;
+  const wrap = document.getElementById('featuredCard');
+  if (!wrap || !data || data.length === 0) return;
   const a = data[0];
-  const heroContent = document.getElementById('heroContent');
-  if (heroContent) {
-    heroContent.innerHTML = `
-      ${badge(a.category)}
-      <h1 class="hero-title">
-        <a href="article.html?id=${a.id}">${a.title}</a>
-      </h1>
-      <p class="hero-excerpt">${a.excerpt || ''}</p>
-      <div class="hero-meta">
-        <span>${a.author || 'ORIZEEN Staff'}</span>
-        <span>${fmtDate(a.created_at)}</span>
+  wrap.innerHTML = `
+    <a href="article.html?id=${a.id}" class="photocard">
+      <div class="photocard-img-wrap">
+        ${a.image_url
+          ? `<img src="${a.image_url}" alt="${a.title}" loading="lazy"/>`
+          : `<div class="photocard-no-img"></div>`}
+        ${badge(a.category)}
       </div>
-    `;
-  }
+      <div class="photocard-body">
+        <h2 class="photocard-title">${a.title}</h2>
+        <p class="photocard-excerpt">${a.excerpt || ''}</p>
+        <div class="photocard-meta">
+          <span>${a.author || 'ORIZEEN Staff'}</span>
+          ${a.location ? `<span>📍 ${a.location}</span>` : ''}
+          <span>${a.news_date ? fmtDate(a.news_date) : fmtDate(a.created_at)}</span>
+        </div>
+        <span class="photocard-read">Read Story →</span>
+      </div>
+    </a>
+  `;
 }
 
 // --- LOAD TICKER ---
