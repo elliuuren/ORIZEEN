@@ -310,3 +310,75 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   observer.observe(panel, { attributes: true, attributeFilter: ['style'] });
 });
+
+async function postToBuffer({ id, title, excerpt, image_url }) {
+
+  // ── YOUR CREDENTIALS (fill these in) ──────────
+  const BUFFER_KEY  = "63PVqXQ85_XUtuo6rxRiAF4ou8-tBuQHxGbOZHDc3ep";
+  const BITLY_TOKEN = "92212b1c020e9d3a0dd6ee7740f3ac2176bc7dd4";
+  const SITE_URL    = "https://theorizeentimes.getorizeen.workers.dev";
+
+  const CHANNEL_IDS = [
+    "6a126998c687a22dd41dd5db", // X
+    "6a1268c9c687a22dd41dd48a", // Facebook
+    "6a1268aac687a22dd41dd441", // Threads
+  ];
+  // ──────────────────────────────────────────────
+
+  // 1 — Shorten URL via Bitly
+  const longUrl = `${SITE_URL}/article?id=${id}`;
+  let shortUrl = longUrl;
+
+  try {
+    const bitlyRes = await fetch("https://api-ssl.bitly.com/v4/shorten", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${BITLY_TOKEN}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ long_url: longUrl })
+    });
+    const bitlyData = await bitlyRes.json();
+    if (bitlyData.link) shortUrl = bitlyData.link;
+  } catch (e) {
+    console.warn("Bitly failed, using long URL");
+  }
+
+  // 2 — Build caption
+  const caption = `${title}\n\n${excerpt}\n\n🔗 ${shortUrl}`;
+
+  // 3 — Post to each Buffer channel
+  for (const channelId of CHANNEL_IDS) {
+    try {
+      const res = await fetch("https://api.buffer.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${BUFFER_KEY}`
+        },
+        body: JSON.stringify({
+          query: `
+            mutation {
+              createPost(input: {
+                text: ${JSON.stringify(caption)},
+                channelId: "${channelId}",
+                schedulingType: automatic,
+                mode: now,
+                assets: [{ url: ${JSON.stringify(image_url)}, type: image }]
+              }) {
+                ... on PostActionSuccess { post { id } }
+                ... on MutationError { message }
+              }
+            }
+          `
+        })
+      });
+      const result = await res.json();
+      console.log(`Buffer channel ${channelId}:`, result);
+    } catch (e) {
+      console.warn(`Failed to post to channel ${channelId}:`, e);
+    }
+  }
+
+  console.log("All platforms posted successfully");
+}
