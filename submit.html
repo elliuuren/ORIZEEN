@@ -39,17 +39,24 @@
         <div class="form-row">
           <div class="form-group">
             <label>Category</label>
-            <select id="sCategory" class="admin-input">
-              <option>BREAKING</option>
-              <option>WORLD</option>
-              <option>POLITICS</option>
-              <option>TECH</option>
-              <option>BUSINESS</option>
-              <option>SPORTS</option>
-              <option>CULTURE</option>
-              <option>SCIENCE</option>
-              <option>OPINION</option>
-            </select>
+            <div class="custom-select" id="sCategorySelect">
+              <div class="custom-select-trigger" id="sCategoryTrigger">
+                <span class="category-badge breaking" id="sCategoryBadge">BREAKING</span>
+                <span class="custom-select-arrow">&#8964;</span>
+              </div>
+              <div class="custom-select-dropdown" id="sCategoryDropdown">
+                <div class="custom-option" data-value="BREAKING"><span class="category-badge breaking">BREAKING</span></div>
+                <div class="custom-option" data-value="WORLD"><span class="category-badge world">WORLD</span></div>
+                <div class="custom-option" data-value="POLITICS"><span class="category-badge politics">POLITICS</span></div>
+                <div class="custom-option" data-value="TECH"><span class="category-badge tech">TECH</span></div>
+                <div class="custom-option" data-value="BUSINESS"><span class="category-badge business">BUSINESS</span></div>
+                <div class="custom-option" data-value="SPORTS"><span class="category-badge sports">SPORTS</span></div>
+                <div class="custom-option" data-value="CULTURE"><span class="category-badge culture">CULTURE</span></div>
+                <div class="custom-option" data-value="SCIENCE"><span class="category-badge science">SCIENCE</span></div>
+                <div class="custom-option" data-value="OPINION"><span class="category-badge opinion">OPINION</span></div>
+              </div>
+              <input type="hidden" id="sCategory" value="BREAKING"/>
+            </div>
           </div>
           <div class="form-group">
             <label>Location</label>
