@@ -2,13 +2,12 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "theorizeentimes",
   "compatibility_date": "2026-05-25",
+  "compatibility_flags": ["nodejs_compat"],
   "observability": {
     "enabled": true
   },
   "assets": {
-    "directory": "."
-  },
-  "compatibility_flags": [
-    "nodejs_compat"
-  ]
+    "directory": ".",
+    "binding": "ASSETS"
+  }
 }
