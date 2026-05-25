@@ -48,7 +48,7 @@ export default {
       return new Response("OK", { status: 200 });
     }
 
-    // ── All other requests — serve normal website ─
-    return fetch(request);
+    // with this:
+return env.ASSETS.fetch(request);
   }
 };
