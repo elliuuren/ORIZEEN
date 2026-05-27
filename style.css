@@ -43,16 +43,10 @@ img { width: 100%; display: block; object-fit: cover; }
   justify-content: space-between; gap: 1.5rem;
 }
 .logo { display: flex; align-items: baseline; gap: 0.35rem; }
-.logo-main {
-  font-family: var(--font-display);
-  font-weight: 900; font-size: 1.5rem;
-  color: var(--gold); letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.logo-sub {
-  font-family: var(--font-display);
-  font-weight: 400; font-style: italic;
-  font-size: 1rem; color: var(--gold); opacity: 0.8;
+.logo-img {
+  height: 44px;
+  width: auto;
+  object-fit: contain;
 }
 .main-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
 .main-nav a {
