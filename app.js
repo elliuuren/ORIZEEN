@@ -43,7 +43,7 @@ function fmtDate(iso) {
 
 // --- LOAD FEATURED PHOTOCARD ---
 async function loadHero() {
-  const data = await fetchArticles(0, 1, currentCat);
+  const data = await fetchArticles(0, 1, 'BREAKING');
   const wrap = document.getElementById('featuredCard');
   if (!wrap || !data || data.length === 0) return;
   const a = data[0];
