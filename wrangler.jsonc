@@ -1,10 +1,8 @@
 {
+  "$schema": "node_modules/wrangler/config-schema.json",
   "name": "theorizeentimes",
-  "main": "_worker.js",
-  "compatibility_date": "2026-05-25",
-  "assets": {
-    "directory": ".",
-    "binding": "ASSETS",
-    "not_found_handling": "single-page-application"
-  }
+  "compatibility_date": "2026-05-23",
+  "observability": { "enabled": true },
+  "assets": { "directory": "." },
+  "compatibility_flags": ["nodejs_compat"]
 }
