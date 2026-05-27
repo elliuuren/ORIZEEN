@@ -42,9 +42,14 @@ img { width: 100%; display: block; object-fit: cover; }
   display: flex; align-items: center;
   justify-content: space-between; gap: 1.5rem;
 }
-.logo { display: flex; align-items: baseline; gap: 0.35rem; }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
 .logo-img {
-  height: 44px;
+  height: 64px;
   width: auto;
   object-fit: contain;
 }
