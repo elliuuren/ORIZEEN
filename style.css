@@ -36,22 +36,25 @@ img { width: 100%; display: block; object-fit: cover; }
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255,255,255,0.07);
 }
+
 .header-inner {
   max-width: 1280px; margin: 0 auto;
-  padding: 1rem 2rem;
+  padding: 0.5rem 2rem;
   display: flex; align-items: center;
   justify-content: space-between; gap: 1.5rem;
 }
+
 .logo {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  text-decoration: none;
 }
 
 .logo-img {
-  height: 64px;
+  height: 80px;
   width: auto;
   object-fit: contain;
+  display: block;
 }
 .main-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
 .main-nav a {
