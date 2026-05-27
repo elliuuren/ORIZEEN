@@ -335,7 +335,7 @@ async function postToBuffer({ id, title, excerpt, image_url }) {
   let shortUrl = longUrl;
 
   try {
-    const bitlyRes = await fetch("/api/shorten", {
+    const bitlyRes = await fetch("https://orizeen-api.getorizeen.workers.dev/api/shorten", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url: longUrl })
@@ -350,7 +350,7 @@ async function postToBuffer({ id, title, excerpt, image_url }) {
   const caption = `${title}\n\n${excerpt}\n\n🔗 ${shortUrl}`;
 
   // 3 — Post via Worker
-  await fetch("/api/post", {
+  await fetch("https://orizeen-api.getorizeen.workers.dev/api/post", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ caption, image_url, channelIds: CHANNEL_IDS })
