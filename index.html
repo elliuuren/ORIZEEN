@@ -10,35 +10,44 @@
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header class="site-header">
-    <div class="header-inner">
-      <a href="index.html" class="logo">
-  <img 
-    src="https://i.ibb.co.com/9HJgqzfp/Picsart-26-05-26-08-14-42-179.png" 
-    alt="ORIZEEN Times" 
-    class="logo-img"
-  />
-</a>
-      <nav class="main-nav">
-        <a href="index.html">Home</a>
-        <a href="#" data-cat="BREAKING">Breaking</a>
-        <a href="#" data-cat="WORLD">World</a>
-        <a href="#" data-cat="POLITICS">Politics</a>
-        <a href="#" data-cat="TECH">Tech</a>
-        <a href="#" data-cat="BUSINESS">Business</a>
-        <a href="#" data-cat="SPORTS">Sports</a>
-        <a href="submit.html" style="color:var(--green)">+ Share News</a>
-      </nav>
-      <span class="live-date" id="liveDate"></span>
+<!-- HEADER -->
+<header class="site-header">
+
+  <!-- Logo Bar (top) -->
+  <div class="logo-bar">
+    <a href="index.html" class="logo">
+      <img 
+        src="https://i.ibb.co.com/9HJgqzfp/Picsart-26-05-26-08-14-42-179.png" 
+        alt="ORIZEEN Times" 
+        class="logo-img"
+      />
+    </a>
+  </div>
+
+  <!-- Nav Bar (below logo) -->
+  <div class="header-inner">
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="#" data-cat="BREAKING">Breaking</a>
+      <a href="#" data-cat="WORLD">World</a>
+      <a href="#" data-cat="POLITICS">Politics</a>
+      <a href="#" data-cat="TECH">Tech</a>
+      <a href="#" data-cat="BUSINESS">Business</a>
+      <a href="#" data-cat="SPORTS">Sports</a>
+      <a href="submit.html" style="color:var(--green)">+ Share News</a>
+    </nav>
+    <span class="live-date" id="liveDate"></span>
+  </div>
+
+  <!-- Ticker -->
+  <div class="ticker-bar">
+    <span class="ticker-label">LATEST</span>
+    <div class="ticker-wrap">
+      <div class="ticker-track" id="tickerTrack">Loading...</div>
     </div>
-    <div class="ticker-bar">
-      <span class="ticker-label">LATEST</span>
-      <div class="ticker-wrap">
-        <div class="ticker-track" id="tickerTrack">Loading...</div>
-      </div>
-    </div>
-  </header>
+  </div>
+
+</header>
 
   <!-- FEATURED PHOTOCARD -->
   <section class="featured-section">
