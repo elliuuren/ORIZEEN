@@ -737,3 +737,117 @@ option { background: #1a1a1a; }
   border-color: #1877F2;
   background: rgba(24,119,242,0.1);
 }
+
+/* ==============================
+   ORIZEEN TIMES — CSS ADDITIONS
+   Add these to the END of style.css
+   ============================== */
+
+/* ORIZEENALS category badge */
+.category-badge.orizeenals {
+  background: #0A0A0A;
+  color: #C9A84C;
+  border: 1px solid #C9A84C;
+  box-shadow: 0 0 8px rgba(201,168,76,0.3);
+}
+
+/* Featured star badge on hero */
+.featured-star {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #C9A84C;
+  color: #000;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 1px;
+}
+
+/* Source credit on cards */
+.card-source, .photocard-source {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.4);
+  margin-top: 0.35rem;
+}
+.card-source a, .photocard-source a {
+  color: var(--green);
+  text-decoration: none;
+}
+.card-source a:hover, .photocard-source a:hover {
+  text-decoration: underline;
+}
+
+/* Footer legal links */
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin: 1rem 0 0.5rem;
+}
+.footer-legal a {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.35);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+}
+.footer-legal a:hover {
+  color: var(--green);
+}
+
+/* Footer logo */
+.footer-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+.footer-logo-img {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.8;
+}
+
+/* Legal pages */
+.legal-page {
+  max-width: 800px;
+  margin: 3rem auto;
+  padding: 0 2rem 4rem;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.8;
+}
+.legal-page h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  border-bottom: 2px solid var(--green);
+  padding-bottom: 0.75rem;
+}
+.legal-page h2 {
+  font-size: 1.1rem;
+  color: #C9A84C;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.legal-page p {
+  margin-bottom: 1rem;
+  color: rgba(255,255,255,0.65);
+}
+.legal-page a {
+  color: var(--green);
+  text-decoration: none;
+}
+.legal-page a:hover {
+  text-decoration: underline;
+}
+
+/* Admin source fields */
+#fSourceName, #fSourceUrl {
+  width: 100%;
+}
