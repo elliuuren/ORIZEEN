@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — ORIZEEN Times</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+
+  <!-- LOGIN SCREEN -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <a href="index.html" class="logo" style="justify-content:center;display:flex;margin-bottom:2rem">
+        <img src="https://i.ibb.co/9HJgqzfp/Picsart-26-05-26-08-14-42-179.png" alt="ORIZEEN Times" class="logo-img" style="height:60px"/>
+      </a>
+      <h2 class="login-title">Admin Access</h2>
+      <input type="password" id="adminPass" class="admin-input" placeholder="Enter admin password"/>
+      <button class="admin-btn green" onclick="checkLogin()">Enter</button>
+      <p class="login-error" id="loginError"></p>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div class="admin-panel" id="adminPanel" style="display:none">
+    <header class="admin-header">
+      <a href="index.html" class="logo">
+        <img src="https://i.ibb.co/9HJgqzfp/Picsart-26-05-26-08-14-42-179.png" alt="ORIZEEN Times" class="logo-img" style="height:50px"/>
+      </a>
+      <span class="admin-badge">Control Panel</span>
+      <button class="admin-btn red small" onclick="logout()">Logout</button>
+    </header>
+
+    <div class="admin-inner">
+
+      <!-- ADD / EDIT FORM -->
+      <section class="admin-card">
+        <h3 id="formTitle">Publish New Article</h3>
+        <input type="hidden" id="editId"/>
+
+        <div class="form-group">
+          <label>Headline *</label>
+          <input type="text" id="fTitle" class="admin-input" placeholder="Article headline"/>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Category *</label>
+            <div class="custom-select" id="categorySelect">
+              <div class="custom-select-trigger" id="categoryTrigger">
+                <span class="category-badge breaking" id="categoryBadge">BREAKING</span>
+                <span class="custom-select-arrow">&#8964;</span>
+              </div>
+              <div class="custom-select-dropdown" id="categoryDropdown">
+                <div class="custom-option" data-value="BREAKING"><span class="category-badge breaking">BREAKING</span></div>
+                <div class="custom-option" data-value="WORLD"><span class="category-badge world">WORLD</span></div>
+                <div class="custom-option" data-value="POLITICS"><span class="category-badge politics">POLITICS</span></div>
+                <div class="custom-option" data-value="TECH"><span class="category-badge tech">TECH</span></div>
+                <div class="custom-option" data-value="BUSINESS"><span class="category-badge business">BUSINESS</span></div>
+                <div class="custom-option" data-value="SPORTS"><span class="category-badge sports">SPORTS</span></div>
+                <div class="custom-option" data-value="CULTURE"><span class="category-badge culture">CULTURE</span></div>
+                <div class="custom-option" data-value="SCIENCE"><span class="category-badge science">SCIENCE</span></div>
+                <div class="custom-option" data-value="OPINION"><span class="category-badge opinion">OPINION</span></div>
+                <div class="custom-option" data-value="ORIZEENALS"><span class="category-badge exclusive">ORIZEENALS</span></div>
+              </div>
+              <input type="hidden" id="fCategory" value="BREAKING"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Author</label>
+            <input type="text" id="fAuthor" class="admin-input" placeholder="Reporter name"/>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" id="fDate" class="admin-input"/>
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" id="fLocation" class="admin-input" placeholder="e.g. Dhaka, Bangladesh"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Image URL</label>
+          <input type="text" id="fImage" class="admin-input" placeholder="https://... (paste image link)"/>
+        </div>
+
+        <!-- SOURCE SECTION -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Source Name</label>
+            <input type="text" id="fSourceName" class="admin-input" placeholder="e.g. Reuters, BBC News"/>
+          </div>
+          <div class="form-group">
+            <label>Source URL</label>
+            <input type="text" id="fSourceUrl" class="admin-input" placeholder="https://..."/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Excerpt (short summary)</label>
+          <textarea id="fExcerpt" class="admin-input" rows="2" placeholder="2-3 sentence summary shown on homepage"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Full Article Content *</label>
+          <textarea id="fContent" class="admin-input" rows="10" placeholder="Write full article here. Use double line break for new paragraph."></textarea>
+        </div>
+
+        <!-- FEATURE CHECKBOX -->
+        <div class="form-group" style="display:flex;align-items:center;gap:0.75rem">
+          <input type="checkbox" id="fFeatured" style="width:18px;height:18px;accent-color:var(--green);cursor:pointer"/>
+          <label for="fFeatured" style="cursor:pointer;margin:0">Mark as Featured Article</label>
+        </div>
+
+        <div class="form-actions">
+          <button class="admin-btn green" onclick="saveArticle()">
+            <span id="saveLabel">Publish Article</span>
+          </button>
+          <button class="admin-btn ghost" onclick="resetForm()">Clear</button>
+        </div>
+        <p class="form-msg" id="formMsg"></p>
+      </section>
+
+      <!-- ARTICLES LIST -->
+      <section class="admin-card">
+        <h3>All Articles</h3>
+        <div id="adminList" class="admin-list">Loading...</div>
+      </section>
+
+      <!-- SUBMISSIONS -->
+      <section class="admin-card">
+        <h3>Community Submissions</h3>
+        <div id="submissionsList" class="admin-list">Loading...</div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="theme.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
