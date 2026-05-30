@@ -249,6 +249,11 @@ document.querySelectorAll('.custom-option').forEach(opt => {
     document.querySelectorAll('.custom-option').forEach(o => o.classList.remove('selected'));
     opt.classList.add('selected');
     selectEl.classList.remove('open');
+
+    // Show/hide breaking fields
+    const isBreaking = val === 'BREAKING';
+    document.getElementById('parentCatGroup').style.display = isBreaking ? 'block' : 'none';
+    document.getElementById('breakingDurationGroup').style.display = isBreaking ? 'block' : 'none';
   });
 });
 
