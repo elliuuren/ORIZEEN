@@ -46,6 +46,10 @@ function resetForm() {
   document.getElementById('fFeatured').checked = false;
   document.getElementById('formTitle').textContent = 'Publish New Article';
   document.getElementById('saveLabel').textContent = 'Publish Article';
+  document.getElementById('fParentCategory').value = 'WORLD';
+document.getElementById('fBreakingDuration').value = '24';
+document.getElementById('parentCatGroup').style.display = 'none';
+document.getElementById('breakingDurationGroup').style.display = 'none';
   // Reset category badge
   document.getElementById('categoryBadge').textContent = 'BREAKING';
   document.getElementById('categoryBadge').className = 'category-badge breaking';
