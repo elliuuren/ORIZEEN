@@ -64,6 +64,11 @@ async function saveArticle() {
   const source_name = document.getElementById('fSourceName').value.trim();
   const source_url = document.getElementById('fSourceUrl').value.trim();
   const featured = document.getElementById('fFeatured').checked;
+  const parent_category = document.getElementById('fParentCategory').value;
+const breaking_hours = parseInt(document.getElementById('fBreakingDuration').value);
+const breaking_until = category === 'BREAKING'
+  ? new Date(Date.now() + breaking_hours * 60 * 60 * 1000).toISOString()
+  : null;
 
   if (!title || !content) {
     msg('Headline and content are required.', 'red');
@@ -84,11 +89,12 @@ async function saveArticle() {
   }
 
   const payload = {
-    title, category, author, image_url, excerpt, content,
-    news_date, location, source_name, source_url,
-    featured, published: true
-  };
-
+  title, category, author, image_url, excerpt, content,
+  news_date, location, source_name, source_url,
+  featured, published: true,
+  parent_category: category === 'BREAKING' ? parent_category : null,
+  breaking_until: category === 'BREAKING' ? breaking_until : null
+};
   const headers = {
     'apikey': SUPABASE_KEY,
     'Authorization': `Bearer ${SUPABASE_KEY}`,
