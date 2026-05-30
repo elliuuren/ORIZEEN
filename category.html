@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ORIZEEN Times</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo-bar">
+    <a href="index.html" class="logo">
+      <img src="https://i.ibb.co/9HJgqzfp/Picsart-26-05-26-08-14-42-179.png" alt="ORIZEEN Times" class="logo-img"/>
+    </a>
+  </div>
+  <div class="header-inner">
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="category.html?cat=BREAKING">Breaking</a>
+      <a href="category.html?cat=WORLD">World</a>
+      <a href="category.html?cat=POLITICS">Politics</a>
+      <a href="category.html?cat=TECH">Tech</a>
+      <a href="category.html?cat=BUSINESS">Business</a>
+      <a href="category.html?cat=SPORTS">Sports</a>
+      <a href="category.html?cat=CULTURE">Culture</a>
+      <a href="category.html?cat=SCIENCE">Science</a>
+      <a href="category.html?cat=OPINION">Opinion</a>
+      <a href="category.html?cat=ORIZEENALS">Orizeenals</a>
+      <a href="submit.html" style="color:var(--green)">+ Share News</a>
+    </nav>
+    <span class="live-date" id="liveDate"></span>
+  </div>
+  <div class="ticker-bar">
+    <span class="ticker-label">LATEST</span>
+    <div class="ticker-wrap">
+      <div class="ticker-track" id="tickerTrack">Loading...</div>
+    </div>
+  </div>
+</header>
+
+<main class="articles-section">
+  <div class="section-header">
+    <h2 id="sectionTitle">Loading...</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="articles-grid" id="articlesGrid"></div>
+  <div class="load-more-wrap">
+    <button class="load-more-btn" id="loadMoreBtn" style="display:none">Load More</button>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <a href="index.html" class="logo footer-logo">
+      <img src="https://i.ibb.co/9HJgqzfp/Picsart-26-05-26-08-14-42-179.png" alt="ORIZEEN Times" class="logo-img footer-logo-img"/>
+    </a>
+    <nav class="footer-legal">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms & Conditions</a>
+      <a href="disclaimer.html">Disclaimer</a>
+      <a href="corrections.html">Corrections Policy</a>
+    </nav>
+    <p class="footer-copy">© ORIZEEN Times <span id="footerYear"></span>. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script src="theme.js"></script>
+<script src="category.js"></script>
+</body>
+</html>
