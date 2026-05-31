@@ -769,6 +769,9 @@ option { background: #1a1a1a; }
   background: rgba(24,119,242,0.1);
 }
 
+.social-badge.hikmah:hover { border-color: #00A86B; color: #00A86B; }
+.social-badge.kotha:hover { border-color: #4A90E2; color: #4A90E2; }
+
 /* ==============================
    ORIZEEN TIMES — CSS ADDITIONS
    Add these to the END of style.css
