@@ -153,7 +153,7 @@ async function loadArticles(reset = false) {
     return;
   }
 
-  const articles = (currentPage === 0 && !currentCat) ? data.slice(1) : data;
+  const articles = data;
   grid.innerHTML += articles.map(renderCard).join('');
   totalLoaded += articles.length;
   currentPage++;
