@@ -180,3 +180,14 @@ if (loadBtn) loadBtn.addEventListener('click', () => loadArticles(false));
 loadHero();
 loadTicker();
 loadArticles(true);
+
+// --- DATE PANEL ---
+const dayEl = document.getElementById('datePanelDay');
+const fullEl = document.getElementById('datePanelFull');
+if (dayEl && fullEl) {
+  const now = new Date();
+  dayEl.textContent = now.toLocaleDateString('en-US', { weekday: 'long' });
+  fullEl.textContent = now.toLocaleDateString('en-US', {
+    day: 'numeric', month: 'long', year: 'numeric'
+  });
+}
