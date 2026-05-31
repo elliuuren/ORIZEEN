@@ -3,15 +3,42 @@
    ================================ */
 
 :root {
-  --black: #0A0A0A;
+  --bg: #0A0A0A;
+  --bg2: #111;
+  --surface: rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.08);
+  --text: #fff;
+  --text2: rgba(255,255,255,0.6);
+  --text3: rgba(255,255,255,0.35);
   --green: #1DB954;
-  --green-dark: #145A32;
-  --red: #C0392B;
   --gold: #C9A84C;
-  --white: #FFFFFF;
-  --glass: rgba(255,255,255,0.06);
-  --font-display: 'Playfair Display', serif;
-  --font-body: 'DM Sans', sans-serif;
+  --red: #C0392B;
+  --shadow: 0 4px 24px rgba(29,185,84,0.15);
+  --shadow-card: 0 4px 32px rgba(29,185,84,0.12);
+}
+
+[data-theme="light"] {
+  --bg: #F5F5F0;
+  --bg2: #EAEAE4;
+  --surface: rgba(0,0,0,0.04);
+  --border: rgba(0,0,0,0.1);
+  --text: #0A0A0A;
+  --text2: rgba(0,0,0,0.6);
+  --text3: rgba(0,0,0,0.35);
+  --shadow: 0 4px 24px rgba(0,0,0,0.1);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.12);
+}
+
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg2: #111;
+  --surface: rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.08);
+  --text: #fff;
+  --text2: rgba(255,255,255,0.6);
+  --text3: rgba(255,255,255,0.35);
+  --shadow: 0 4px 24px rgba(29,185,84,0.15);
+  --shadow-card: 0 4px 32px rgba(29,185,84,0.12);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
