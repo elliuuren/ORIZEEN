@@ -107,7 +107,7 @@ async function loadTicker() {
 // --- RENDER ARTICLE CARD ---
 function renderCard(a) {
   return `
-    <article class="article-card">
+    <article class="article-card" data-category="${a.category}">
       <a href="article.html?id=${a.id}" class="card-image">
         ${a.image_url
           ? `<img src="${a.image_url}" alt="${a.title}" loading="lazy"/>`
