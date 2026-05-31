@@ -90,10 +90,10 @@ img { width: 100%; display: block; object-fit: cover; }
 /* === HEADER === */
 .site-header {
   position: sticky; top: 0; z-index: 100;
-  background: var(--header-bg);
+  background: rgba(10,10,10,0.98) !important;
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  transition: background 0.4s ease;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  transition: none;
 }
 
 .logo-bar {
@@ -471,10 +471,9 @@ img { width: 100%; display: block; object-fit: cover; }
 
 /* === FOOTER === */
 .site-footer {
-  background: var(--bg2);
-  border-top: 1px solid var(--border);
+  background: #0A0A0A !important;
+  border-top: 1px solid rgba(255,255,255,0.07);
   padding: 3rem 2rem; text-align: center;
-  transition: background 0.4s ease;
 }
 .footer-inner { max-width: 1280px; margin: 0 auto; }
 .footer-logo {
@@ -737,3 +736,18 @@ option { background: var(--bg2); color: var(--text); }
   .card-body { order: 2; padding: 1rem; }
   .logo-img { width: 90%; }
 }
+
+/* Always dark header/footer regardless of theme */
+.site-header .main-nav a { color: rgba(255,255,255,0.6); }
+.site-header .main-nav a:hover { color: #1DB954; }
+.site-header .live-date { color: rgba(255,255,255,0.35); }
+.site-header .logo-bar { border-bottom: 1px solid rgba(255,255,255,0.06); }
+.site-footer .footer-legal a { color: rgba(255,255,255,0.35); }
+.site-footer .footer-legal a:hover { color: #1DB954; }
+.site-footer .footer-copy { color: rgba(255,255,255,0.2); }
+.site-footer .social-badge { border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+.date-panel { background: #111 !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; }
+.date-panel-inner { color: rgba(255,255,255,0.35) !important; }
+.ticker-bar { background: rgba(0,0,0,0.6) !important; border-top: 1px solid rgba(255,255,255,0.05) !important; }
+.ticker-item { color: rgba(255,255,255,0.55) !important; }
+.ticker-item a { color: rgba(255,255,255,0.55) !important; }
