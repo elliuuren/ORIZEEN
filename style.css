@@ -3,11 +3,11 @@
    ================================ */
 
 :root {
-  --bg: #0A0A0A;
+  --bg: var(--bg);
   --bg2: #111;
   --surface: rgba(255,255,255,0.04);
   --border: rgba(255,255,255,0.08);
-  --text: #fff;
+  --text: var(--text);
   --text2: rgba(255,255,255,0.6);
   --text3: rgba(255,255,255,0.35);
   --green: #1DB954;
@@ -22,7 +22,7 @@
   --bg2: #EAEAE4;
   --surface: rgba(0,0,0,0.04);
   --border: rgba(0,0,0,0.1);
-  --text: #0A0A0A;
+  --text: var(--bg);
   --text2: rgba(0,0,0,0.6);
   --text3: rgba(0,0,0,0.35);
   --shadow: 0 4px 24px rgba(0,0,0,0.1);
@@ -30,11 +30,11 @@
 }
 
 [data-theme="dark"] {
-  --bg: #0A0A0A;
+  --bg: var(--bg);
   --bg2: #111;
   --surface: rgba(255,255,255,0.04);
   --border: rgba(255,255,255,0.08);
-  --text: #fff;
+  --text: var(--text);
   --text2: rgba(255,255,255,0.6);
   --text3: rgba(255,255,255,0.35);
   --shadow: 0 4px 24px rgba(29,185,84,0.15);
@@ -740,17 +740,17 @@ option { background: #1a1a1a; }
   transform: translateY(-2px);
 }
 .social-badge.threads:hover {
-  color: #fff;
-  border-color: #fff;
+  color: var(--text);
+  border-color: var(--text);
   background: rgba(255,255,255,0.08);
 }
 .social-badge.x:hover {
-  color: #fff;
-  border-color: #fff;
+  color: var(--text);
+  border-color: var(--text);
   background: rgba(255,255,255,0.08);
 }
 .social-badge.instagram:hover {
-  color: #fff;
+  color: var(--text);
   border-color: #E1306C;
   background: linear-gradient(
     45deg,
@@ -772,7 +772,7 @@ option { background: #1a1a1a; }
 
 /* ORIZEENALS category badge */
 .category-badge.orizeenals {
-  background: #0A0A0A;
+  background: var(--bg);
   color: #C9A84C;
   border: 1px solid #C9A84C;
   box-shadow: 0 0 8px rgba(201,168,76,0.3);
@@ -849,7 +849,7 @@ option { background: #1a1a1a; }
 .legal-page h1 {
   font-family: 'Playfair Display', serif;
   font-size: 2rem;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 0.5rem;
   border-bottom: 2px solid var(--green);
   padding-bottom: 0.75rem;
