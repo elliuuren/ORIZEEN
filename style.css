@@ -914,3 +914,71 @@ option { background: #1a1a1a; }
   color: var(--gold);
   font-weight: 500;
 }
+
+/* ── Modernized UI ───────────────────── */
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+.article-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.article-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card);
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+
+.card-title a {
+  color: var(--text);
+  text-decoration: none;
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.card-title a:hover {
+  color: var(--green);
+}
+
+.card-excerpt {
+  color: var(--text2);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  margin-top: 0.4rem;
+}
+
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--text3);
+  margin-top: 0.75rem;
+}
+
+.section-header h2 {
+  color: var(--text);
+}
+
+.site-footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+}
+
+.footer-copy {
+  color: var(--text3);
+  font-size: 0.72rem;
+  text-align: center;
+  margin-top: 1rem;
+}
