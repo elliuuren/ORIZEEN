@@ -308,12 +308,16 @@ img { width: 100%; display: block; object-fit: cover; }
   grid-template-columns: 1fr 180px;
   gap: 0;
   align-items: center;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 .article-card:hover {
   background: rgba(255,255,255,0.02);
   transform: none;
   box-shadow: none;
   border-color: rgba(255,255,255,0.07);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 40px rgba(29,185,84,0.2);
 }
 .card-image {
   order: 2;
