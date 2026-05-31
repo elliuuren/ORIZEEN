@@ -751,3 +751,26 @@ option { background: var(--bg2); color: var(--text); }
 .ticker-bar { background: rgba(0,0,0,0.6) !important; border-top: 1px solid rgba(255,255,255,0.05) !important; }
 .ticker-item { color: rgba(255,255,255,0.55) !important; }
 .ticker-item a { color: rgba(255,255,255,0.55) !important; }
+
+/* Rotating date panel */
+.date-panel-rotating {
+  position: relative;
+  height: 1.2em;
+  overflow: hidden;
+  min-width: 300px;
+}
+.date-rotate-item {
+  position: absolute;
+  top: 0; left: 0;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+.date-rotate-item.active {
+  opacity: 1;
+  transform: translateY(0);
+                }
