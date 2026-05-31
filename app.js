@@ -181,13 +181,125 @@ loadHero();
 loadTicker();
 loadArticles(true);
 
-// --- DATE PANEL ---
-const dayEl = document.getElementById('datePanelDay');
-const fullEl = document.getElementById('datePanelFull');
-if (dayEl && fullEl) {
+// --- MULTI-CALENDAR DATE PANEL ---
+function initDatePanel() {
   const now = new Date();
-  dayEl.textContent = now.toLocaleDateString('en-US', { weekday: 'long' });
-  fullEl.textContent = now.toLocaleDateString('en-US', {
-    day: 'numeric', month: 'long', year: 'numeric'
+
+  // 1 — Gregorian (CE)
+  const gregorian = now.toLocaleDateString('en-US', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
   });
+
+  // 2 — Bangla/Bengali (বঙ্গাব্দ) — shown in Bangla script
+  function toBengaliDate(date) {
+    const bengaliMonths = [
+      'বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ',
+      'ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ',
+      'পৌষ','মাঘ','ফাল্গুন','চৈত্র'
+    ];
+    const bengaliDays = ['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
+    const bengaliNumerals = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+
+    function toBengaliNumeral(n) {
+      return String(n).split('').map(d => bengaliNumerals[parseInt(d)] || d).join('');
+    }
+
+    // Bangla calendar starts ~14 April
+    // Month boundaries (Gregorian day of year when each Bangla month starts)
+    const year = date.getFullYear();
+    const month = date.getMonth(); // 0-indexed
+    const day = date.getDate();
+
+    // Simplified but accurate Bangla date conversion
+    const monthDays = [
+      [4, 14], [5, 15], [6, 16], [7, 17], [8, 17],
+      [9, 17], [10, 18], [11, 18], [12, 18], [1, 14],
+      [2, 13], [3, 14]
+    ];
+
+    let banglaMonth, banglaDay, banglaYear;
+
+    // Find which Bangla month we're in
+    let bMonth = -1;
+    for (let i = 0; i < 12; i++) {
+      const [gMonth, gDay] = monthDays[i];
+      const nextIdx = (i + 1) % 12;
+      const [ngMonth, ngDay] = monthDays[nextIdx];
+
+      const startDate = new Date(year, gMonth - 1, gDay);
+      let endYear = year;
+      if (ngMonth < gMonth) endYear = year + 1;
+      const endDate = new Date(endYear, ngMonth - 1, ngDay - 1);
+
+      if (date >= startDate && date <= endDate) {
+        bMonth = i;
+        banglaDay = Math.floor((date - startDate) / (1000 * 60 * 60 * 24)) + 1;
+        break;
+      }
+    }
+
+    if (bMonth === -1) { bMonth = 0; banglaDay = 1; }
+
+    // Bangla year = Gregorian year - 593 (adjusted for months before Boishakh)
+    banglaYear = (month < 3 || (month === 3 && day < 14)) ? year - 594 : year - 593;
+
+    const dayName = bengaliDays[date.getDay()];
+    return `${dayName}, ${toBengaliNumeral(banglaDay)} ${bengaliMonths[bMonth]} ${toBengaliNumeral(banglaYear)} বঙ্গাব্দ`;
+  }
+
+  // 3 — Hijri (Islamic calendar)
+  function toHijriDate(date) {
+    const hijriMonths = [
+      'Muharram','Safar','Rabi al-Awwal','Rabi al-Thani',
+      'Jumada al-Awwal','Jumada al-Thani','Rajab','Sha\'ban',
+      'Ramadan','Shawwal','Dhu al-Qi\'dah','Dhu al-Hijjah'
+    ];
+    const hijriDays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+    // Use Intl API for accurate Hijri conversion
+    try {
+      const hijriFormatter = new Intl.DateTimeFormat('en-u-ca-islamic', {
+        day: 'numeric', month: 'long', year: 'numeric', weekday: 'long'
+      });
+      const parts = hijriFormatter.formatToParts(date);
+      const h = {};
+      parts.forEach(p => h[p.type] = p.value);
+
+      // Map month name to our list index for clean naming
+      const monthMap = {
+        'Muharram': 'Muharram', 'Safar': 'Safar',
+        "Rabīʿ al-Awwal": 'Rabi al-Awwal', "Rabīʿ al-Ākhir": 'Rabi al-Thani',
+        "Jumādā al-Awwal": 'Jumada al-Awwal', "Jumādā al-Ākhir": 'Jumada al-Thani',
+        'Rajab': 'Rajab', "Shaʿbān": "Sha'ban",
+        'Ramaḍān': 'Ramadan', 'Shawwāl': 'Shawwal',
+        "Ḏū al-Qaʿda": "Dhu al-Qi'dah", "Ḏū al-Ḥijja": 'Dhu al-Hijjah'
+      };
+
+      const cleanMonth = monthMap[h.month] || h.month;
+      return `${h.weekday}, ${h.day} ${cleanMonth} ${h.year} AH`;
+    } catch(e) {
+      return 'Hijri date unavailable';
+    }
+  }
+
+  // Set values
+  const gregorianEl = document.getElementById('dateGregorian');
+  const bengaliEl = document.getElementById('dateBengali');
+  const hijriEl = document.getElementById('dateHijri');
+
+  if (gregorianEl) gregorianEl.textContent = `📅 ${gregorian} CE`;
+  if (bengaliEl) bengaliEl.textContent = `🌸 ${toBengaliDate(now)}`;
+  if (hijriEl) hijriEl.textContent = `☪️ ${toHijriDate(now)}`;
+
+  // Auto-rotate every 4 seconds
+  const items = document.querySelectorAll('.date-rotate-item');
+  if (items.length === 0) return;
+  let current = 0;
+  setInterval(() => {
+    items[current].classList.remove('active');
+    current = (current + 1) % items.length;
+    items[current].classList.add('active');
+  }, 4000);
 }
+
+initDatePanel();
