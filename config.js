@@ -10,3 +10,8 @@ const ADMIN_PASSWORD = 'orizeen2025';
 
 // How many articles per page on homepage
 const PAGE_SIZE = 9;
+
+// === AD CONFIG ===
+const AD_IMAGE_URL = "https://i.ibb.co.com/n8RPJYzy/Picsart-25-11-09-06-32-25-924.jpg";
+const AD_LINK_URL = "https://facebook.com/notestate.SC/";
+const AD_ENABLED = true; // set to false to hide ad slot
