@@ -486,8 +486,10 @@ img { width: 100%; display: block; object-fit: cover; }
 /* === FOOTER === */
 .site-footer {
   background: #0A0A0A !important;
-  border-top: 1px solid rgba(255,255,255,0.07);
-  padding: 3rem 2rem; text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.07) !important;
+  padding: 3rem 2rem;
+  text-align: center;
+  color: rgba(255,255,255,0.6) !important;
 }
 .footer-inner { max-width: 1280px; margin: 0 auto; }
 .footer-logo {
@@ -882,3 +884,23 @@ option { background: var(--bg2); color: var(--text); }
   opacity: 0.9;
   transform: scale(1.02);
 }
+
+/* Force footer always black regardless of theme */
+.site-footer,
+.site-footer *,
+.site-footer .footer-inner,
+.site-footer .footer-copy,
+.site-footer .footer-legal,
+.site-footer .footer-legal a,
+.site-footer .social-links,
+.site-footer .social-badge,
+.site-footer .footer-logo,
+.site-footer .footer-logo-img {
+  background-color: transparent !important;
+}
+
+.site-footer { background: #0A0A0A !important; }
+.site-footer .footer-copy { color: rgba(255,255,255,0.2) !important; }
+.site-footer .footer-legal a { color: rgba(255,255,255,0.35) !important; }
+.site-footer .footer-legal a:hover { color: #1DB954 !important; }
+.site-footer .social-badge { border-color: rgba(255,255,255,0.1) !important; color: rgba(255,255,255,0.5) !important; }
