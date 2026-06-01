@@ -303,3 +303,16 @@ function initDatePanel() {
 }
 
 initDatePanel();
+
+// --- AD SLOT ---
+const adSlot = document.getElementById('adSlot');
+if (adSlot && typeof AD_ENABLED !== 'undefined' && AD_ENABLED) {
+  adSlot.innerHTML = `
+    <span class="ad-label">Advertisement</span>
+    <a href="${AD_LINK_URL}" target="_blank" rel="noopener sponsored" class="ad-link">
+      <img src="${AD_IMAGE_URL}" alt="Advertisement" class="ad-img"/>
+    </a>
+  `;
+} else if (adSlot && !AD_ENABLED) {
+  adSlot.closest('.featured-ad-slot').style.display = 'none';
+}
