@@ -118,3 +118,17 @@ async function loadTicker() {
 
 loadTicker();
 loadArticles(true);
+
+// --- HIDE LOGO BAR ON SCROLL ---
+const logoBar = document.querySelector('.logo-bar');
+let lastScroll = 0;
+
+window.addEventListener('scroll', () => {
+  const currentScroll = window.scrollY;
+  if (currentScroll > 60) {
+    logoBar.classList.add('hidden');
+  } else {
+    logoBar.classList.remove('hidden');
+  }
+  lastScroll = currentScroll;
+}, { passive: true });
