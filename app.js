@@ -316,3 +316,17 @@ if (adSlot && typeof AD_ENABLED !== 'undefined' && AD_ENABLED) {
 } else if (adSlot && !AD_ENABLED) {
   adSlot.closest('.featured-ad-slot').style.display = 'none';
 }
+
+// --- HIDE LOGO BAR ON SCROLL ---
+const logoBar = document.querySelector('.logo-bar');
+let lastScroll = 0;
+
+window.addEventListener('scroll', () => {
+  const currentScroll = window.scrollY;
+  if (currentScroll > 60) {
+    logoBar.classList.add('hidden');
+  } else {
+    logoBar.classList.remove('hidden');
+  }
+  lastScroll = currentScroll;
+}, { passive: true });
