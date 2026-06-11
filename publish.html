@@ -580,22 +580,33 @@ document.querySelectorAll('.cat-option').forEach(opt => {
 
       const article = rewriteData.article;
 
-      // ── Step 2: Generate Photocard ──
-      addLog('⏳', 'Generating branded photocard...');
-      let finalImage = imageUrl || rewriteData.og_image || '';
-      try {
-        const canvas = await generatePhotocard(article, category, finalImage);
-        addLog('⏳', 'Uploading photocard to imgBB...');
-        const uploadedUrl = await uploadToImgBB(canvas);
-        if (uploadedUrl) {
-          finalImage = uploadedUrl;
-          updateLastLog('✅', 'Photocard generated and uploaded', 'success');
-        } else {
-          updateLastLog('⚠️', 'imgBB upload failed — using original image', 'info');
-        }
-      } catch(e) {
-        updateLastLog('⚠️', 'Photocard generation failed — using original image', 'info');
-      }
+      // ── Step 2: Generate AI Photocard ──
+addLog('⏳', 'Generating AI branded photocard...');
+let finalImage = imageUrl || rewriteData.og_image || '';
+try {
+  const photocardRes = await fetch(`${API_URL}/api/photocard`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      title: article.title,
+      excerpt: article.excerpt,
+      category: category,
+      location: article.location,
+      date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
+      source_url: sourceUrl,
+      image_url: rewriteData.og_image || imageUrl || ''
+    })
+  });
+  const photocardData = await photocardRes.json();
+  if (photocardData.success && photocardData.image_url) {
+    finalImage = photocardData.image_url;
+    updateLastLog('✅', `AI photocard generated (${photocardData.source})`, 'success');
+  } else {
+    updateLastLog('⚠️', 'AI photocard failed — using original image', 'info');
+  }
+} catch(e) {
+  updateLastLog('⚠️', 'AI photocard failed — using original image', 'info');
+}
 
       // ── Step 3: Publish to Supabase ──
       addLog('⏳', 'Publishing article to website...');
@@ -734,331 +745,7 @@ document.querySelectorAll('.cat-option').forEach(opt => {
       document.getElementById('errorMsg').textContent = e.message;
     }
   }
-
-  // === PHOTOCARD GENERATOR ===
-  const CATEGORY_COLORS = {
-    BREAKING:  { bg: '#C0392B', text: '#fff', glow: '#C0392B', border: '#C0392B' },
-    POLITICS:  { bg: '#145A32', text: '#fff', glow: '#C9A84C', border: '#C9A84C' },
-    WORLD:     { bg: '#1C2833', text: '#fff', glow: '#1DB954', border: '#1DB954' },
-    TECH:      { bg: '#0E6655', text: '#1DB954', glow: '#1DB954', border: '#1DB954' },
-    BUSINESS:  { bg: '#C9A84C', text: '#000', glow: '#C9A84C', border: '#C9A84C' },
-    SPORTS:    { bg: '#1DB954', text: '#000', glow: '#1DB954', border: '#1DB954' },
-    CULTURE:   { bg: '#1A1A2E', text: '#C9A84C', glow: '#C9A84C', border: '#C9A84C' },
-    SCIENCE:   { bg: '#117A65', text: '#fff', glow: '#1ABC9C', border: '#1ABC9C' },
-    OPINION:   { bg: 'rgba(0,0,0,0.6)', text: '#fff', glow: '#C0392B', border: '#C0392B' },
-    ORIZEENALS:{ bg: '#0A0A0A', text: '#C9A84C', glow: '#C9A84C', border: '#C9A84C' },
-  };
-
-  const LOGO_URL = "https://i.ibb.co/9HJgqzfp/Picsart-26-05-26-08-14-42-179.png";
-  const DEFAULT_BG_URL = "https://i.ibb.co/rGmrygt3/Picsart-26-05-26-11-05-56-835.jpg";
-  const IMGBB_API_KEY_PC = typeof IMGBB_KEY !== 'undefined' ? IMGBB_KEY : '';
-
-  function loadImage(src) {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => resolve(img);
-      img.onerror = () => {
-        const fallback = new Image();
-        fallback.crossOrigin = 'anonymous';
-        fallback.onload = () => resolve(fallback);
-        fallback.onerror = () => resolve(null);
-        fallback.src = DEFAULT_BG_URL + '?t=' + Date.now();
-      };
-      img.src = src + (src.includes('?') ? '&' : '?') + 'crossorigin=1';
-    });
-  }
-
-  function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-    const words = text.split(' ');
-    let line = '';
-    let lineCount = 0;
-    for (let n = 0; n < words.length; n++) {
-      const testLine = line + words[n] + ' ';
-      if (ctx.measureText(testLine).width > maxWidth && n > 0) {
-        ctx.fillText(line.trim(), x, y + lineCount * lineHeight);
-        line = words[n] + ' ';
-        lineCount++;
-        if (lineCount >= 3) break;
-      } else {
-        line = testLine;
-      }
-    }
-    if (lineCount < 3) ctx.fillText(line.trim(), x, y + lineCount * lineHeight);
-    return lineCount + 1;
-  }
-
-  function roundRect(ctx, x, y, w, h, r) {
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.lineTo(x + w - r, y);
-    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-    ctx.lineTo(x + w, y + h - r);
-    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-    ctx.lineTo(x + r, y + h);
-    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-    ctx.lineTo(x, y + r);
-    ctx.quadraticCurveTo(x, y, x + r, y);
-    ctx.closePath();
-  }
-
-async function generatePhotocard(article, category, imageUrl) {
-    const SIZE = 1080;
-    const canvas = document.createElement('canvas');
-    canvas.width = SIZE;
-    canvas.height = SIZE;
-    const ctx = canvas.getContext('2d');
-    const catStyle = CATEGORY_COLORS[category] || CATEGORY_COLORS.WORLD;
-    const accent = catStyle.border;
-
-    // ── Background ──
-    const bgSrc = imageUrl && !imageUrl.includes('Picsart') ? imageUrl : null;
-    const bgImg = bgSrc ? await loadImage(bgSrc) : null;
-
-    if (bgImg) {
-      // Real news image as background with blur effect
-      ctx.filter = 'blur(0px)';
-      ctx.drawImage(bgImg, 0, 0, SIZE, SIZE);
-      ctx.filter = 'none';
-      ctx.fillStyle = 'rgba(8,8,8,0.78)';
-      ctx.fillRect(0, 0, SIZE, SIZE);
-    } else {
-      // Gradient background when no image
-      const grad = ctx.createLinearGradient(0, 0, SIZE, SIZE);
-      grad.addColorStop(0, '#0A0A0A');
-      grad.addColorStop(0.5, '#111820');
-      grad.addColorStop(1, '#0A0A0A');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, SIZE, SIZE);
-      // Subtle accent glow in corner
-      const radGrad = ctx.createRadialGradient(SIZE * 0.8, SIZE * 0.2, 0, SIZE * 0.8, SIZE * 0.2, SIZE * 0.5);
-      radGrad.addColorStop(0, `${accent}18`);
-      radGrad.addColorStop(1, 'transparent');
-      ctx.fillStyle = radGrad;
-      ctx.fillRect(0, 0, SIZE, SIZE);
-    }
-
-    // ── Main Image Frame (top 48%) ──
-    const imgH = SIZE * 0.48;
-    const imgY = 72;
-
-    if (bgImg) {
-      ctx.save();
-      roundRect(ctx, 32, imgY, SIZE - 64, imgH, 20);
-      ctx.clip();
-      ctx.drawImage(bgImg, 32, imgY, SIZE - 64, imgH);
-      ctx.restore();
-      // Fade bottom of image into panel
-      const fadeGrad = ctx.createLinearGradient(0, imgY + imgH - 80, 0, imgY + imgH);
-      fadeGrad.addColorStop(0, 'rgba(8,8,8,0)');
-      fadeGrad.addColorStop(1, 'rgba(8,8,8,0.95)');
-      ctx.fillStyle = fadeGrad;
-      ctx.fillRect(32, imgY + imgH - 80, SIZE - 64, 80);
-    } else {
-      // No image — show logo centered in image area
-      ctx.save();
-      roundRect(ctx, 32, imgY, SIZE - 64, imgH, 20);
-      ctx.clip();
-      ctx.fillStyle = 'rgba(255,255,255,0.02)';
-      ctx.fillRect(32, imgY, SIZE - 64, imgH);
-      ctx.restore();
-      // Logo centered
-      const logoImg2 = await loadImage(LOGO_URL);
-      if (logoImg2) {
-        const lw = 400, lh = 100;
-        const lx = (SIZE - lw) / 2;
-        const ly = imgY + (imgH - lh) / 2;
-        ctx.globalAlpha = 0.25;
-        ctx.drawImage(logoImg2, lx, ly, lw, lh);
-        ctx.globalAlpha = 1;
-      }
-    }
-
-    // Accent glow border around image
-    ctx.save();
-    ctx.strokeStyle = accent;
-    ctx.lineWidth = 2.5;
-    ctx.shadowColor = accent;
-    ctx.shadowBlur = 24;
-    roundRect(ctx, 32, imgY, SIZE - 64, imgH, 20);
-    ctx.stroke();
-    ctx.restore();
-
-    // ── Logo pill (top left) ──
-    ctx.save();
-    ctx.fillStyle = 'rgba(8,8,8,0.92)';
-    ctx.shadowColor = 'rgba(201,168,76,0.25)';
-    ctx.shadowBlur = 12;
-    roundRect(ctx, 30, 14, 230, 50, 25);
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(201,168,76,0.4)';
-    ctx.lineWidth = 1;
-    roundRect(ctx, 30, 14, 230, 50, 25);
-    ctx.stroke();
-    ctx.restore();
-
-    const logoImg = await loadImage(LOGO_URL);
-    if (logoImg) {
-      ctx.drawImage(logoImg, 40, 18, 210, 42);
-    } else {
-      ctx.fillStyle = '#C9A84C';
-      ctx.font = 'bold 22px Arial';
-      ctx.fillText('ORIZEEN Times', 50, 46);
-    }
-
-    // ── Date + Location pill (top right) ──
-    const dateStr = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-    const locRaw = (article.location || '').slice(0, 20);
-    const pillW = 210;
-    const pillX = SIZE - pillW - 28;
-
-    ctx.save();
-    ctx.fillStyle = 'rgba(8,8,8,0.88)';
-    roundRect(ctx, pillX, 14, pillW, 50, 25);
-    ctx.fill();
-    ctx.strokeStyle = `${accent}55`;
-    ctx.lineWidth = 1;
-    roundRect(ctx, pillX, 14, pillW, 50, 25);
-    ctx.stroke();
-    ctx.restore();
-
-    ctx.textAlign = 'center';
-    const pillCenterX = pillX + pillW / 2;
-    if (locRaw) {
-      ctx.fillStyle = 'rgba(255,255,255,0.85)';
-      ctx.font = '500 14px Arial';
-      ctx.fillText(locRaw, pillCenterX, 33);
-      ctx.fillStyle = 'rgba(255,255,255,0.45)';
-      ctx.font = '300 13px Arial';
-      ctx.fillText(dateStr, pillCenterX, 52);
-    } else {
-      ctx.fillStyle = 'rgba(255,255,255,0.85)';
-      ctx.font = '500 15px Arial';
-      ctx.fillText(dateStr, pillCenterX, 44);
-    }
-    ctx.textAlign = 'left';
-
-    // ── Category badge (bottom left of image) ──
-    ctx.font = 'bold 15px Arial';
-    const catLabel = category === 'ORIZEENALS' ? '★ ORIZEENALS' : category;
-    const catW = ctx.measureText(catLabel).width + 36;
-    const catBadgeY = imgY + imgH + 18;
-
-    ctx.save();
-    ctx.fillStyle = catStyle.bg;
-    ctx.shadowColor = catStyle.glow;
-    ctx.shadowBlur = 16;
-    roundRect(ctx, 32, catBadgeY - 18, catW, 32, 16);
-    ctx.fill();
-    ctx.strokeStyle = catStyle.border;
-    ctx.lineWidth = 1.5;
-    roundRect(ctx, 32, catBadgeY - 18, catW, 32, 16);
-    ctx.stroke();
-    ctx.restore();
-
-    ctx.fillStyle = catStyle.text;
-    ctx.font = 'bold 14px Arial';
-    ctx.fillText(catLabel, 50, catBadgeY + 3);
-
-    // ── Bottom panel ──
-    const panelY = imgY + imgH + 64;
-    ctx.fillStyle = 'rgba(6,6,6,0.96)';
-    ctx.fillRect(0, panelY, SIZE, SIZE - panelY);
-    // Accent left border
-    ctx.fillStyle = accent;
-    ctx.fillRect(0, panelY, 5, SIZE - panelY);
-    // Top border line
-    ctx.strokeStyle = `${accent}40`;
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(0, panelY);
-    ctx.lineTo(SIZE, panelY);
-    ctx.stroke();
-
-    // ── Headline ──
-    const hlX = 40;
-    const hlMaxW = SIZE - 80;
-    let hlY = panelY + 62;
-
-    const titleWords = article.title.split(' ');
-    const firstWord = titleWords[0].toUpperCase();
-    const restTitle = titleWords.slice(1).join(' ');
-
-    // First word — bold accent color
-    ctx.font = 'bold 62px Georgia, serif';
-    ctx.fillStyle = accent;
-    ctx.shadowColor = accent;
-    ctx.shadowBlur = 8;
-    ctx.fillText(firstWord, hlX, hlY);
-    ctx.shadowBlur = 0;
-    const fwWidth = ctx.measureText(firstWord + ' ').width;
-
-    // Rest — italic white
-    ctx.font = 'italic 50px Georgia, serif';
-    ctx.fillStyle = '#ffffff';
-    const hlLines = wrapText(ctx, restTitle, hlX + fwWidth, hlY, hlMaxW - fwWidth, 58);
-
-    // If headline wrapped to 2+ lines, second line starts fresh
-    if (hlLines > 1) {
-      ctx.font = 'italic 50px Georgia, serif';
-      ctx.fillStyle = '#ffffff';
-    }
-
-    // ── Excerpt ──
-    const exY = hlY + (hlLines * 58) + 24;
-    ctx.font = '300 22px Arial';
-    ctx.fillStyle = 'rgba(255,255,255,0.58)';
-    const excerptText = (article.excerpt || '').slice(0, 140);
-    wrapText(ctx, excerptText, hlX, exY, hlMaxW, 32);
-
-    // ── Divider + READ MORE ──
-    ctx.strokeStyle = `${accent}55`;
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(hlX, SIZE - 88);
-    ctx.lineTo(SIZE - hlX, SIZE - 88);
-    ctx.stroke();
-
-    ctx.font = '300 17px Arial';
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    ctx.letterSpacing = '3px';
-    ctx.fillText('READ MORE  ↓', hlX, SIZE - 64);
-
-    // ── Footer credits ──
-    ctx.font = '300 15px Arial';
-    ctx.fillStyle = 'rgba(255,255,255,0.22)';
-    ctx.letterSpacing = '0px';
-    ctx.fillText('© ORIZEEN Times', hlX, SIZE - 26);
-    ctx.textAlign = 'right';
-    try {
-      const srcHost = new URL(document.getElementById('sourceUrl').value).hostname.replace('www.', '');
-      ctx.fillText('Source: ' + srcHost, SIZE - hlX, SIZE - 26);
-    } catch(e) {}
-    ctx.textAlign = 'left';
-
-    return canvas;
-      }
-
-  async function uploadToImgBB(canvas) {
-    return new Promise((resolve) => {
-      canvas.toBlob(async (blob) => {
-        try {
-          const key = typeof IMGBB_KEY !== 'undefined' ? IMGBB_KEY : IMGBB_API_KEY_PC;
-          if (!key) { resolve(null); return; }
-          const formData = new FormData();
-          formData.append('image', blob, 'photocard.png');
-          const res = await fetch(`https://api.imgbb.com/1/upload?key=${key}`, {
-            method: 'POST',
-            body: formData
-          });
-          const data = await res.json();
-          resolve(data.success ? data.data.url : null);
-        } catch(e) { resolve(null); }
-      }, 'image/png', 0.95);
-    });
-  }
-
-
+  
   function resetPublish() {
     document.getElementById('formCard').style.display = 'flex';
     document.getElementById('progressCard').style.display = 'none';
