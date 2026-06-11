@@ -495,9 +495,25 @@
       updateLastLog('✅', `Article rewritten: "${rewriteData.article.title}"`, 'success');
 
       const article = rewriteData.article;
-      const finalImage = imageUrl || rewriteData.og_image || '';
 
-      // ── Step 2: Publish to Supabase ──
+      // ── Step 2: Generate Photocard ──
+      addLog('⏳', 'Generating branded photocard...');
+      let finalImage = imageUrl || rewriteData.og_image || '';
+      try {
+        const canvas = await generatePhotocard(article, category, finalImage);
+        addLog('⏳', 'Uploading photocard to imgBB...');
+        const uploadedUrl = await uploadToImgBB(canvas);
+        if (uploadedUrl) {
+          finalImage = uploadedUrl;
+          updateLastLog('✅', 'Photocard generated and uploaded', 'success');
+        } else {
+          updateLastLog('⚠️', 'imgBB upload failed — using original image', 'info');
+        }
+      } catch(e) {
+        updateLastLog('⚠️', 'Photocard generation failed — using original image', 'info');
+      }
+
+      // ── Step 3: Publish to Supabase ──
       addLog('⏳', 'Publishing article to website...');
 
       // Unfeature others if featured
@@ -547,7 +563,7 @@
       const articleId = supabaseData[0]?.id;
       updateLastLog('✅', `Published to website — Article #${articleId}`, 'success');
 
-      // ── Step 3: Shorten URL ──
+      // ── Step 4: Shorten URL ──
       addLog('⏳', 'Shortening URL with Bitly...');
       const longUrl = `${SITE_URL}/article?id=${articleId}`;
       let shortUrl = longUrl;
@@ -564,7 +580,7 @@
         updateLastLog('⚠️', 'Bitly failed — using full URL', 'info');
       }
 
-      // ── Step 4: Generate AI Caption ──
+      // ── Step 5: Generate AI Caption ──
       addLog('⏳', 'Generating social media caption with AI...');
       let caption = `${article.title}\n\n${article.excerpt}\n\n🔗 ${shortUrl}`;
       try {
@@ -589,7 +605,7 @@
         updateLastLog('⚠️', 'AI caption failed — using default', 'info');
       }
 
-      // ── Step 5: Post to Buffer ──
+      // ── Step 6: Post to Buffer ──
       addLog('⏳', 'Posting to X, Facebook and Threads...');
       const CHANNEL_IDS = [
         "6a126998c687a22dd41dd5db",
@@ -634,7 +650,258 @@
     }
   }
 
-  // === RESET ===
+  // === PHOTOCARD GENERATOR ===
+  const CATEGORY_COLORS = {
+    BREAKING:  { bg: '#C0392B', text: '#fff', glow: '#C0392B', border: '#C0392B' },
+    POLITICS:  { bg: '#145A32', text: '#fff', glow: '#C9A84C', border: '#C9A84C' },
+    WORLD:     { bg: '#1C2833', text: '#fff', glow: '#1DB954', border: '#1DB954' },
+    TECH:      { bg: '#0E6655', text: '#1DB954', glow: '#1DB954', border: '#1DB954' },
+    BUSINESS:  { bg: '#C9A84C', text: '#000', glow: '#C9A84C', border: '#C9A84C' },
+    SPORTS:    { bg: '#1DB954', text: '#000', glow: '#1DB954', border: '#1DB954' },
+    CULTURE:   { bg: '#1A1A2E', text: '#C9A84C', glow: '#C9A84C', border: '#C9A84C' },
+    SCIENCE:   { bg: '#117A65', text: '#fff', glow: '#1ABC9C', border: '#1ABC9C' },
+    OPINION:   { bg: 'rgba(0,0,0,0.6)', text: '#fff', glow: '#C0392B', border: '#C0392B' },
+    ORIZEENALS:{ bg: '#0A0A0A', text: '#C9A84C', glow: '#C9A84C', border: '#C9A84C' },
+  };
+
+  const LOGO_URL = "https://i.ibb.co/9HJgqzfp/Picsart-26-05-26-08-14-42-179.png";
+  const DEFAULT_BG_URL = "https://i.ibb.co/rGmrygt3/Picsart-26-05-26-11-05-56-835.jpg";
+  const IMGBB_API_KEY_PC = typeof IMGBB_KEY !== 'undefined' ? IMGBB_KEY : '';
+
+  function loadImage(src) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = () => {
+        const fallback = new Image();
+        fallback.crossOrigin = 'anonymous';
+        fallback.onload = () => resolve(fallback);
+        fallback.onerror = () => resolve(null);
+        fallback.src = DEFAULT_BG_URL + '?t=' + Date.now();
+      };
+      img.src = src + (src.includes('?') ? '&' : '?') + 'crossorigin=1';
+    });
+  }
+
+  function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    const words = text.split(' ');
+    let line = '';
+    let lineCount = 0;
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + ' ';
+      if (ctx.measureText(testLine).width > maxWidth && n > 0) {
+        ctx.fillText(line.trim(), x, y + lineCount * lineHeight);
+        line = words[n] + ' ';
+        lineCount++;
+        if (lineCount >= 3) break;
+      } else {
+        line = testLine;
+      }
+    }
+    if (lineCount < 3) ctx.fillText(line.trim(), x, y + lineCount * lineHeight);
+    return lineCount + 1;
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  async function generatePhotocard(article, category, imageUrl) {
+    const SIZE = 1080;
+    const canvas = document.createElement('canvas');
+    canvas.width = SIZE;
+    canvas.height = SIZE;
+    const ctx = canvas.getContext('2d');
+    const catStyle = CATEGORY_COLORS[category] || CATEGORY_COLORS.WORLD;
+    const accent = catStyle.border;
+
+    // Background
+    const bgSrc = imageUrl || DEFAULT_BG_URL;
+    const bgImg = await loadImage(bgSrc);
+    if (bgImg) {
+      ctx.drawImage(bgImg, 0, 0, SIZE, SIZE);
+    }
+    // Dark overlay
+    ctx.fillStyle = 'rgba(10,10,10,0.75)';
+    ctx.fillRect(0, 0, SIZE, SIZE);
+
+    // Main sharp image (top 52%)
+    const imgH = SIZE * 0.52;
+    if (bgImg) {
+      ctx.save();
+      roundRect(ctx, 32, 72, SIZE - 64, imgH, 18);
+      ctx.clip();
+      ctx.drawImage(bgImg, 32, 72, SIZE - 64, imgH);
+      ctx.restore();
+      // glow border
+      ctx.save();
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = 3;
+      ctx.shadowColor = accent;
+      ctx.shadowBlur = 20;
+      roundRect(ctx, 32, 72, SIZE - 64, imgH, 18);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Logo pill (top left)
+    ctx.save();
+    ctx.fillStyle = 'rgba(10,10,10,0.88)';
+    ctx.shadowColor = 'rgba(201,168,76,0.3)';
+    ctx.shadowBlur = 10;
+    roundRect(ctx, 30, 16, 218, 48, 24);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(201,168,76,0.35)';
+    ctx.lineWidth = 1;
+    roundRect(ctx, 30, 16, 218, 48, 24);
+    ctx.stroke();
+    ctx.restore();
+
+    const logoImg = await loadImage(LOGO_URL);
+    if (logoImg) {
+      ctx.drawImage(logoImg, 40, 20, 198, 40);
+    } else {
+      ctx.fillStyle = '#C9A84C';
+      ctx.font = 'bold 24px Arial';
+      ctx.fillText('ORIZEEN Times', 48, 48);
+    }
+
+    // Date pill (top right)
+    const dateStr = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+    const locStr = article.location || '';
+    ctx.save();
+    ctx.fillStyle = 'rgba(10,10,10,0.85)';
+    roundRect(ctx, SIZE - 230, 16, 198, 48, 24);
+    ctx.fill();
+    ctx.strokeStyle = `${accent}55`;
+    ctx.lineWidth = 1;
+    roundRect(ctx, SIZE - 230, 16, 198, 48, 24);
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.font = '500 14px Arial';
+    ctx.textAlign = 'center';
+    if (locStr) {
+      ctx.fillText(locStr.slice(0, 22), SIZE - 131, 33);
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.font = '300 13px Arial';
+      ctx.fillText(dateStr, SIZE - 131, 52);
+    } else {
+      ctx.fillText(dateStr, SIZE - 131, 46);
+    }
+    ctx.textAlign = 'left';
+
+    // Category badge
+    ctx.font = 'bold 15px Arial';
+    const catW = ctx.measureText(category).width + 36;
+    const catY = imgH + 56;
+    ctx.save();
+    ctx.fillStyle = catStyle.bg;
+    ctx.shadowColor = catStyle.glow;
+    ctx.shadowBlur = 14;
+    roundRect(ctx, 32, catY - 20, catW, 32, 16);
+    ctx.fill();
+    ctx.strokeStyle = catStyle.border;
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, 32, catY - 20, catW, 32, 16);
+    ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = catStyle.text;
+    ctx.font = 'bold 14px Arial';
+    ctx.fillText(category, 32 + 18, catY + 2);
+
+    // Bottom glass panel
+    const panelY = imgH + 98;
+    ctx.fillStyle = 'rgba(8,8,8,0.92)';
+    ctx.fillRect(0, panelY, SIZE, SIZE - panelY);
+    ctx.fillStyle = accent;
+    ctx.fillRect(0, panelY, 5, SIZE - panelY);
+    ctx.strokeStyle = `${accent}44`;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, panelY);
+    ctx.lineTo(SIZE, panelY);
+    ctx.stroke();
+
+    // Headline
+    const hlY = panelY + 60;
+    const words = article.title.split(' ');
+    const firstWord = words[0].toUpperCase();
+    const restTitle = words.slice(1).join(' ');
+
+    ctx.font = 'bold 58px Georgia, serif';
+    ctx.fillStyle = accent;
+    ctx.fillText(firstWord, 36, hlY);
+    const fw = ctx.measureText(firstWord + ' ').width;
+
+    ctx.font = 'italic 46px Georgia, serif';
+    ctx.fillStyle = '#ffffff';
+    const hlLines = wrapText(ctx, restTitle, 36 + fw, hlY, SIZE - 80 - fw, 54);
+
+    // Excerpt
+    const exY = hlY + Math.max(hlLines, 1) * 54 + 18;
+    ctx.font = '300 21px Arial';
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    const excerpt = (article.excerpt || '').slice(0, 110) + '...';
+    wrapText(ctx, excerpt, 36, exY, SIZE - 72, 30);
+
+    // Read more line
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(36, SIZE - 80);
+    ctx.lineTo(SIZE - 36, SIZE - 80);
+    ctx.stroke();
+
+    ctx.font = '300 17px Arial';
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.fillText('READ MORE  ↓', 36, SIZE - 56);
+
+    // Footer
+    ctx.font = '300 15px Arial';
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.fillText('© ORIZEEN Times', 36, SIZE - 22);
+    ctx.textAlign = 'right';
+    try {
+      ctx.fillText(new URL(document.getElementById('sourceUrl').value).hostname.replace('www.',''), SIZE - 36, SIZE - 22);
+    } catch(e) {}
+    ctx.textAlign = 'left';
+
+    return canvas;
+  }
+
+  async function uploadToImgBB(canvas) {
+    return new Promise((resolve) => {
+      canvas.toBlob(async (blob) => {
+        try {
+          const key = typeof IMGBB_KEY !== 'undefined' ? IMGBB_KEY : IMGBB_API_KEY_PC;
+          if (!key) { resolve(null); return; }
+          const formData = new FormData();
+          formData.append('image', blob, 'photocard.png');
+          const res = await fetch(`https://api.imgbb.com/1/upload?key=${key}`, {
+            method: 'POST',
+            body: formData
+          });
+          const data = await res.json();
+          resolve(data.success ? data.data.url : null);
+        } catch(e) { resolve(null); }
+      }, 'image/png', 0.95);
+    });
+  }
+
+
   function resetPublish() {
     document.getElementById('formCard').style.display = 'flex';
     document.getElementById('progressCard').style.display = 'none';
