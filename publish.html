@@ -580,33 +580,21 @@ document.querySelectorAll('.cat-option').forEach(opt => {
 
       const article = rewriteData.article;
 
-      // ── Step 2: Generate AI Photocard ──
-addLog('⏳', 'Generating AI branded photocard...');
+ // ── Step 2: Generate Photocard ──
+addLog('⏳', 'Generating photocard...');
 let finalImage = imageUrl || rewriteData.og_image || '';
 try {
-  const photocardRes = await fetch(`${API_URL}/api/photocard`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      title: article.title,
-      excerpt: article.excerpt,
-      category: category,
-      location: article.location,
-      date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
-      source_url: sourceUrl,
-      image_url: rewriteData.og_image || imageUrl || ''
-    })
-  });
-  const photocardData = await photocardRes.json();
-  if (photocardData.success && photocardData.image_url) {
-    finalImage = photocardData.image_url;
-    updateLastLog('✅', `AI photocard generated (${photocardData.source})`, 'success');
+  const canvas = await generatePhotocard(article, category, rewriteData.og_image || imageUrl || '');
+  const uploadedUrl = await uploadToImgBB(canvas);
+  if (uploadedUrl) {
+    finalImage = uploadedUrl;
+    updateLastLog('✅', 'Photocard generated and uploaded', 'success');
   } else {
-    updateLastLog('⚠️', 'AI photocard failed — using original image', 'info');
+    updateLastLog('⚠️', 'imgBB upload failed — using original image', 'info');
   }
 } catch(e) {
-  updateLastLog('⚠️', 'AI photocard failed — using original image', 'info');
-}
+  updateLastLog('⚠️', 'Photocard failed — using original image', 'info');
+  }
 
       // ── Step 3: Publish to Supabase ──
       addLog('⏳', 'Publishing article to website...');
@@ -745,6 +733,216 @@ try {
       document.getElementById('errorMsg').textContent = e.message;
     }
   }
+
+  // === PHOTOCARD ===
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function loadImage(src) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
+}
+
+async function generatePhotocard(article, category, imageUrl) {
+  const SIZE = 1080;
+  const canvas = document.createElement('canvas');
+  canvas.width = SIZE;
+  canvas.height = SIZE;
+  const ctx = canvas.getContext('2d');
+
+  const CAT_STYLES = {
+    BREAKING:  { bg: '#E8302A', text: '#fff' },
+    POLITICS:  { bg: '#145A32', text: '#fff' },
+    WORLD:     { bg: '#1C3A5E', text: '#fff' },
+    TECH:      { bg: '#0E6655', text: '#1DB954' },
+    BUSINESS:  { bg: '#C9A84C', text: '#000' },
+    SPORTS:    { bg: '#1DB954', text: '#000' },
+    CULTURE:   { bg: '#4A235A', text: '#E8C9F5' },
+    SCIENCE:   { bg: '#117A65', text: '#fff' },
+    OPINION:   { bg: '#333', text: '#fff' },
+    ORIZEENALS:{ bg: '#111', text: '#C9A84C' },
+  };
+  const cat = CAT_STYLES[category] || CAT_STYLES.WORLD;
+
+  ctx.fillStyle = '#0A0A0A';
+  ctx.fillRect(0, 0, SIZE, SIZE);
+
+  const imgH = 588;
+  const imgY = 88;
+  const imgPad = 24;
+  const imgW = SIZE - imgPad * 2;
+  const imgRadius = 22;
+
+  if (imageUrl) {
+    const img = await loadImage(imageUrl);
+    if (img) {
+      ctx.save();
+      roundRect(ctx, imgPad, imgY, imgW, imgH, imgRadius);
+      ctx.clip();
+      const scale = Math.max(imgW / img.width, imgH / img.height);
+      const sw = img.width * scale;
+      const sh = img.height * scale;
+      const sx = imgPad + (imgW - sw) / 2;
+      const sy = imgY + (imgH - sh) / 2;
+      ctx.drawImage(img, sx, sy, sw, sh);
+      ctx.restore();
+    }
+  } else {
+    ctx.fillStyle = '#1A1A1A';
+    roundRect(ctx, imgPad, imgY, imgW, imgH, imgRadius);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(201,168,76,0.15)';
+    ctx.font = 'bold 28px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('ORIZEEN Times', SIZE / 2, imgY + imgH / 2);
+    ctx.textAlign = 'left';
+  }
+
+  // Logo pill
+  ctx.save();
+  ctx.fillStyle = '#1A1508';
+  ctx.strokeStyle = '#C9A84C';
+  ctx.lineWidth = 1.5;
+  roundRect(ctx, 28, 22, 220, 52, 26);
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+
+  ctx.font = 'bold 20px Arial';
+  ctx.fillStyle = '#C9A84C';
+  ctx.fillText('ORIZEEN', 52, 53);
+  const orW = ctx.measureText('ORIZEEN ').width;
+  ctx.font = 'italic 18px Arial';
+  ctx.fillStyle = '#C9A84C';
+  ctx.fillText('Times', 52 + orW, 53);
+
+  // Category badge
+  ctx.font = 'bold 18px Arial';
+  const catW = ctx.measureText(category).width + 40;
+  const catX = SIZE - catW - 28;
+  ctx.save();
+  ctx.fillStyle = cat.bg;
+  ctx.shadowColor = cat.bg;
+  ctx.shadowBlur = 12;
+  roundRect(ctx, catX, 22, catW, 52, 26);
+  ctx.fill();
+  ctx.restore();
+  ctx.fillStyle = cat.text;
+  ctx.font = 'bold 18px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText(category, catX + catW / 2, 53);
+  ctx.textAlign = 'left';
+
+  // Headline
+  const hlY = imgY + imgH + 20;
+  const hlMaxW = SIZE - 60;
+  const hlX = 30;
+
+  let fontSize = 78;
+  ctx.font = `bold ${fontSize}px Arial`;
+  let words = article.title.split(' ');
+  let lines = [];
+  let line = '';
+  for (const word of words) {
+    const test = line + (line ? ' ' : '') + word;
+    if (ctx.measureText(test).width > hlMaxW) {
+      if (line) lines.push(line);
+      line = word;
+    } else { line = test; }
+  }
+  if (line) lines.push(line);
+
+  if (lines.length > 3) fontSize = 62;
+  if (lines.length > 4) fontSize = 50;
+
+  ctx.font = `bold ${fontSize}px Arial`;
+  lines = [];
+  line = '';
+  for (const word of words) {
+    const test = line + (line ? ' ' : '') + word;
+    if (ctx.measureText(test).width > hlMaxW) {
+      if (line) lines.push(line);
+      line = word;
+    } else { line = test; }
+  }
+  if (line) lines.push(line);
+
+  const lineH = fontSize * 1.2;
+  const totalTextH = lines.length * lineH;
+  const availH = SIZE - 80 - hlY;
+  const startY = hlY + (availH - totalTextH) / 2 + fontSize;
+
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = `bold ${fontSize}px Arial`;
+  lines.forEach((l, i) => ctx.fillText(l, hlX, startY + i * lineH));
+
+  // Footer
+  const footerH = 80;
+  const footerY = SIZE - footerH;
+  ctx.fillStyle = 'rgba(0,0,0,0.6)';
+  ctx.fillRect(0, footerY, SIZE, footerH);
+  ctx.strokeStyle = 'rgba(201,168,76,0.4)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, footerY);
+  ctx.lineTo(SIZE, footerY);
+  ctx.stroke();
+
+  ctx.font = '300 16px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.fillText('a concern of The ORIZEEN Media Technologies', 28, footerY + 28);
+  ctx.font = '500 15px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.fillText('@theorizeentimes', 28, footerY + 58);
+
+  ctx.textAlign = 'right';
+  ctx.font = '300 14px Arial';
+  ctx.fillStyle = 'rgba(255,255,255,0.35)';
+  try {
+    const host = new URL(document.getElementById('sourceUrl').value).hostname.replace('www.','');
+    ctx.fillText('Source: ' + host, SIZE - 28, footerY + 28);
+  } catch(e) {}
+  ctx.fillText('© ORIZEEN Times ' + new Date().getFullYear(), SIZE - 28, footerY + 58);
+  ctx.textAlign = 'left';
+
+  return canvas;
+}
+
+async function uploadToImgBB(canvas) {
+  return new Promise((resolve) => {
+    canvas.toBlob(async (blob) => {
+      try {
+        const key = typeof IMGBB_KEY !== 'undefined' ? IMGBB_KEY : '';
+        if (!key) { resolve(null); return; }
+        const formData = new FormData();
+        formData.append('image', blob, 'photocard.png');
+        const res = await fetch(`https://api.imgbb.com/1/upload?key=${key}`, {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        resolve(data.success ? data.data.url : null);
+      } catch(e) { resolve(null); }
+    }, 'image/png', 0.95);
+  });
+    }
   
   function resetPublish() {
     document.getElementById('formCard').style.display = 'flex';
