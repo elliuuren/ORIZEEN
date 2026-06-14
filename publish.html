@@ -9,354 +9,189 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0A0A0A;
-      --bg2: #111;
+      --bg: #0A0A0A; --bg2: #111;
       --surface: rgba(255,255,255,0.04);
       --border: rgba(255,255,255,0.08);
-      --text: #fff;
-      --text2: rgba(255,255,255,0.6);
+      --text: #fff; --text2: rgba(255,255,255,0.6);
       --text3: rgba(255,255,255,0.35);
-      --green: #1DB954;
-      --gold: #C9A84C;
-      --red: #C0392B;
+      --green: #1DB954; --gold: #C9A84C; --red: #C0392B;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
-      background: var(--bg);
-      color: var(--text);
+      background: var(--bg); color: var(--text);
       font-family: 'DM Sans', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      min-height: 100vh; display: flex;
+      flex-direction: column; align-items: center;
       padding: 2rem 1rem;
     }
-
-    /* === LOGO === */
-    .logo-wrap {
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-    .logo-wrap img {
-      height: 60px;
-      width: auto;
-      object-fit: contain;
-    }
-
-    /* === LOGIN === */
+    .logo-wrap { margin-bottom: 2rem; text-align: center; }
+    .logo-wrap img { height: 60px; width: auto; object-fit: contain; }
     #loginScreen {
-      width: 100%;
-      max-width: 420px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 2rem;
+      width: 100%; max-width: 420px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem;
     }
     .login-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.4rem;
-      margin-bottom: 1.5rem;
-      text-align: center;
-      color: var(--text);
+      font-family: 'Playfair Display', serif; font-size: 1.4rem;
+      margin-bottom: 1.5rem; text-align: center; color: var(--text);
     }
     .login-sub {
-      font-size: 0.8rem;
-      color: var(--text3);
-      text-align: center;
-      margin-bottom: 1.5rem;
-      letter-spacing: 0.04em;
+      font-size: 0.8rem; color: var(--text3);
+      text-align: center; margin-bottom: 1.5rem; letter-spacing: 0.04em;
     }
-
-    /* === PUBLISH PANEL === */
     #publishPanel {
-      width: 100%;
-      max-width: 560px;
-      display: none;
-      flex-direction: column;
-      gap: 1.5rem;
+      width: 100%; max-width: 560px;
+      display: none; flex-direction: column; gap: 1.5rem;
     }
-
     .panel-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.6rem;
-      color: var(--text);
-      text-align: center;
+      font-family: 'Playfair Display', serif; font-size: 1.6rem;
+      color: var(--text); text-align: center;
     }
     .panel-sub {
-      font-size: 0.78rem;
-      color: var(--text3);
-      text-align: center;
-      margin-top: 0.25rem;
-      letter-spacing: 0.04em;
+      font-size: 0.78rem; color: var(--text3);
+      text-align: center; margin-top: 0.25rem; letter-spacing: 0.04em;
     }
-
-    /* === FORM === */
     .form-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.1rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.5rem;
+      display: flex; flex-direction: column; gap: 1.1rem;
     }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
     .form-group label {
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text3);
+      font-size: 0.7rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text3);
     }
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     input, select, textarea {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      width: 100%;
-      transition: border-color 0.2s;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.75rem 1rem; color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+      width: 100%; transition: border-color 0.2s;
     }
     input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: rgba(29,185,84,0.5);
+      outline: none; border-color: rgba(29,185,84,0.5);
     }
     select option { background: #111; color: #fff; }
-
-    .checkbox-group {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      cursor: pointer;
-    }
+    .checkbox-group { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
     .checkbox-group input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--green);
-      cursor: pointer;
+      width: 18px; height: 18px; accent-color: var(--green); cursor: pointer;
     }
     .checkbox-group label {
-      font-size: 0.85rem;
-      color: var(--text2);
-      cursor: pointer;
-      text-transform: none;
-      letter-spacing: 0;
+      font-size: 0.85rem; color: var(--text2); cursor: pointer;
+      text-transform: none; letter-spacing: 0;
     }
-
-    /* === BUTTONS === */
     .btn {
-      width: 100%;
-      padding: 0.9rem;
-      border-radius: 10px;
-      border: none;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      letter-spacing: 0.06em;
+      width: 100%; padding: 0.9rem; border-radius: 10px; border: none;
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600;
+      cursor: pointer; letter-spacing: 0.06em;
       transition: opacity 0.2s, transform 0.15s;
     }
     .btn:hover { opacity: 0.88; transform: translateY(-1px); }
     .btn:active { transform: translateY(0); }
     .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
     .btn-green { background: var(--green); color: #000; }
-    .btn-ghost {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text2);
-    }
-    .btn-red { background: var(--red); color: #fff; }
-
-    /* === PROGRESS LOG === */
+    .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text2); }
     #progressCard {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.5rem;
-      display: none;
-      flex-direction: column;
-      gap: 0.75rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.5rem;
+      display: none; flex-direction: column; gap: 0.75rem;
     }
     .progress-title {
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text3);
-      margin-bottom: 0.25rem;
+      font-size: 0.7rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text3); margin-bottom: 0.25rem;
     }
     .log-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-      font-size: 0.85rem;
-      line-height: 1.5;
-      animation: fadeIn 0.3s ease;
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      font-size: 0.85rem; line-height: 1.5; animation: fadeIn 0.3s ease;
     }
     .log-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
     .log-text { color: var(--text2); }
     .log-text.success { color: var(--green); }
     .log-text.error { color: var(--red); }
     .log-text.info { color: var(--gold); }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    /* === RESULT CARD === */
     #resultCard {
-      background: rgba(29,185,84,0.06);
-      border: 1px solid rgba(29,185,84,0.3);
-      border-radius: 16px;
-      padding: 1.5rem;
-      display: none;
-      flex-direction: column;
-      gap: 0.75rem;
-      text-align: center;
+      background: rgba(29,185,84,0.06); border: 1px solid rgba(29,185,84,0.3);
+      border-radius: 16px; padding: 1.5rem;
+      display: none; flex-direction: column; gap: 0.75rem; text-align: center;
     }
     .result-icon { font-size: 2.5rem; }
-    .result-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
-      color: var(--green);
-    }
-    .result-article-title {
-      font-size: 0.95rem;
-      color: var(--text2);
-      line-height: 1.5;
-    }
+    .result-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--green); }
+    .result-article-title { font-size: 0.95rem; color: var(--text2); line-height: 1.5; }
     .result-links {
-      display: flex;
-      gap: 0.75rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 0.5rem;
+      display: flex; gap: 0.75rem; justify-content: center;
+      flex-wrap: wrap; margin-top: 0.5rem;
     }
     .result-link {
-      font-size: 0.78rem;
-      padding: 0.4rem 1rem;
-      border-radius: 999px;
-      border: 1px solid rgba(29,185,84,0.4);
-      color: var(--green);
-      text-decoration: none;
-      transition: background 0.2s;
+      font-size: 0.78rem; padding: 0.4rem 1rem; border-radius: 999px;
+      border: 1px solid rgba(29,185,84,0.4); color: var(--green);
+      text-decoration: none; transition: background 0.2s;
     }
     .result-link:hover { background: rgba(29,185,84,0.1); }
-
-    /* === ERROR CARD === */
     #errorCard {
-      background: rgba(192,57,43,0.06);
-      border: 1px solid rgba(192,57,43,0.3);
-      border-radius: 16px;
-      padding: 1.5rem;
-      display: none;
-      flex-direction: column;
-      gap: 0.5rem;
-      text-align: center;
+      background: rgba(192,57,43,0.06); border: 1px solid rgba(192,57,43,0.3);
+      border-radius: 16px; padding: 1.5rem;
+      display: none; flex-direction: column; gap: 0.5rem; text-align: center;
     }
     .error-title { font-size: 1rem; color: var(--red); font-weight: 600; }
     .error-msg { font-size: 0.82rem; color: var(--text2); }
-
-    /* === FOOTER === */
     .publish-footer {
-      margin-top: 2rem;
-      font-size: 0.7rem;
-      color: var(--text3);
-      text-align: center;
-      letter-spacing: 0.06em;
+      margin-top: 2rem; font-size: 0.7rem;
+      color: var(--text3); text-align: center; letter-spacing: 0.06em;
     }
     .publish-footer a { color: var(--green); text-decoration: none; }
-
-    @media (max-width: 480px) {
-      .form-row { grid-template-columns: 1fr; }
-    }
-
     /* Custom category dropdown */
-.custom-select { position: relative; user-select: none; }
-.custom-select-trigger {
-  display: flex; align-items: center;
-  justify-content: space-between;
-  padding: 0.65rem 1rem;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-.custom-select-trigger:hover { border-color: rgba(29,185,84,0.4); }
-.custom-select.open .custom-select-trigger {
-  border-color: rgba(29,185,84,0.5);
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-.custom-select-dropdown {
-  display: none;
-  position: absolute;
-  top: 100%; left: 0; right: 0;
-  background: #111;
-  border: 1px solid rgba(29,185,84,0.3);
-  border-top: none;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  z-index: 50;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-  max-height: 280px;
-  overflow-y: auto;
-}
-.custom-select.open .custom-select-dropdown { display: block; }
-.cat-option {
-  padding: 0.65rem 1rem;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.cat-option:hover { background: rgba(255,255,255,0.04); }
-
-/* Category badge styles */
-.cat-badge {
-  display: inline-block;
-  padding: 0.22rem 0.8rem;
-  border-radius: 999px;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.cat-badge.breaking { background: #C0392B; color: #fff; }
-.cat-badge.politics { background: #145A32; color: #fff; border: 1px solid #C9A84C; }
-.cat-badge.world { background: #1C2833; color: #fff; border: 1px solid #1DB954; }
-.cat-badge.tech { background: #0E6655; color: #1DB954; }
-.cat-badge.business { background: #C9A84C; color: #000; }
-.cat-badge.sports { background: #1DB954; color: #000; }
-.cat-badge.culture { background: #1A1A2E; color: #C9A84C; border: 1px solid #C9A84C; }
-.cat-badge.science { background: #117A65; color: #fff; }
-.cat-badge.opinion { background: transparent; color: #fff; border: 1px solid #C0392B; }
-.cat-badge.orizeenals { background: #0A0A0A; color: #C9A84C; border: 1px solid #C9A84C; }
+    .custom-select { position: relative; user-select: none; }
+    .custom-select-trigger {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.65rem 1rem; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 8px;
+      cursor: pointer; transition: border-color 0.2s;
+    }
+    .custom-select-trigger:hover { border-color: rgba(29,185,84,0.4); }
+    .custom-select.open .custom-select-trigger {
+      border-color: rgba(29,185,84,0.5);
+      border-bottom-left-radius: 0; border-bottom-right-radius: 0;
+    }
+    .custom-select-dropdown {
+      display: none; position: absolute; top: 100%; left: 0; right: 0;
+      background: #111; border: 1px solid rgba(29,185,84,0.3);
+      border-top: none; border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px; z-index: 50;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      max-height: 280px; overflow-y: auto;
+    }
+    .custom-select.open .custom-select-dropdown { display: block; }
+    .cat-option { padding: 0.65rem 1rem; cursor: pointer; transition: background 0.15s; }
+    .cat-option:hover { background: rgba(255,255,255,0.04); }
+    .cat-badge {
+      display: inline-block; padding: 0.22rem 0.8rem; border-radius: 999px;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .cat-badge.breaking { background: #C0392B; color: #fff; }
+    .cat-badge.politics { background: #145A32; color: #fff; border: 1px solid #C9A84C; }
+    .cat-badge.world { background: #1C2833; color: #fff; border: 1px solid #1DB954; }
+    .cat-badge.tech { background: #0E6655; color: #1DB954; }
+    .cat-badge.business { background: #C9A84C; color: #000; }
+    .cat-badge.sports { background: #1DB954; color: #000; }
+    .cat-badge.culture { background: #1A1A2E; color: #C9A84C; border: 1px solid #C9A84C; }
+    .cat-badge.science { background: #117A65; color: #fff; }
+    .cat-badge.opinion { background: transparent; color: #fff; border: 1px solid #C0392B; }
+    .cat-badge.orizeenals { background: #0A0A0A; color: #C9A84C; border: 1px solid #C9A84C; }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
-  <!-- LOGO -->
   <div class="logo-wrap">
     <a href="index.html">
       <img src="https://i.ibb.co/9HJgqzfp/Picsart-26-05-26-08-14-42-179.png" alt="ORIZEEN Times"/>
     </a>
   </div>
 
-  <!-- LOGIN SCREEN -->
   <div id="loginScreen">
     <h2 class="login-title">Publisher Access</h2>
     <p class="login-sub">ORIZEEN Times — Automated Publishing</p>
@@ -368,17 +203,13 @@
     <p id="loginError" style="color:var(--red);font-size:0.8rem;margin-top:0.75rem;text-align:center"></p>
   </div>
 
-  <!-- PUBLISH PANEL -->
   <div id="publishPanel">
-
     <div>
       <h1 class="panel-title">⚡ Auto Publisher</h1>
       <p class="panel-sub">Paste a news URL → AI rewrites, publishes & posts to socials</p>
     </div>
 
-    <!-- FORM -->
     <div class="form-card" id="formCard">
-
       <div class="form-group">
         <label>📰 News Article URL *</label>
         <input type="url" id="sourceUrl" placeholder="https://bbc.com/news/..."/>
@@ -386,27 +217,27 @@
 
       <div class="form-row">
         <div class="form-group">
-  <label>📂 Category *</label>
-  <div class="custom-select" id="catSelect">
-    <div class="custom-select-trigger" id="catTrigger">
-      <span class="cat-badge breaking" id="catBadgeDisplay">BREAKING</span>
-      <span style="color:rgba(255,255,255,0.3);font-size:1.1rem">⌄</span>
-    </div>
-    <div class="custom-select-dropdown" id="catDropdown">
-      <div class="cat-option" data-value="BREAKING"><span class="cat-badge breaking">BREAKING</span></div>
-      <div class="cat-option" data-value="WORLD"><span class="cat-badge world">WORLD</span></div>
-      <div class="cat-option" data-value="POLITICS"><span class="cat-badge politics">POLITICS</span></div>
-      <div class="cat-option" data-value="TECH"><span class="cat-badge tech">TECH</span></div>
-      <div class="cat-option" data-value="BUSINESS"><span class="cat-badge business">BUSINESS</span></div>
-      <div class="cat-option" data-value="SPORTS"><span class="cat-badge sports">SPORTS</span></div>
-      <div class="cat-option" data-value="CULTURE"><span class="cat-badge culture">CULTURE</span></div>
-      <div class="cat-option" data-value="SCIENCE"><span class="cat-badge science">SCIENCE</span></div>
-      <div class="cat-option" data-value="OPINION"><span class="cat-badge opinion">OPINION</span></div>
-      <div class="cat-option" data-value="ORIZEENALS"><span class="cat-badge orizeenals">★ ORIZEENALS</span></div>
-    </div>
-  </div>
-  <input type="hidden" id="category" value="BREAKING"/>
-</div>
+          <label>📂 Category *</label>
+          <div class="custom-select" id="catSelect">
+            <div class="custom-select-trigger" id="catTrigger">
+              <span class="cat-badge breaking" id="catBadgeDisplay">BREAKING</span>
+              <span style="color:rgba(255,255,255,0.3);font-size:1.1rem">⌄</span>
+            </div>
+            <div class="custom-select-dropdown" id="catDropdown">
+              <div class="cat-option" data-value="BREAKING"><span class="cat-badge breaking">BREAKING</span></div>
+              <div class="cat-option" data-value="WORLD"><span class="cat-badge world">WORLD</span></div>
+              <div class="cat-option" data-value="POLITICS"><span class="cat-badge politics">POLITICS</span></div>
+              <div class="cat-option" data-value="TECH"><span class="cat-badge tech">TECH</span></div>
+              <div class="cat-option" data-value="BUSINESS"><span class="cat-badge business">BUSINESS</span></div>
+              <div class="cat-option" data-value="SPORTS"><span class="cat-badge sports">SPORTS</span></div>
+              <div class="cat-option" data-value="CULTURE"><span class="cat-badge culture">CULTURE</span></div>
+              <div class="cat-option" data-value="SCIENCE"><span class="cat-badge science">SCIENCE</span></div>
+              <div class="cat-option" data-value="OPINION"><span class="cat-badge opinion">OPINION</span></div>
+              <div class="cat-option" data-value="ORIZEENALS"><span class="cat-badge orizeenals">★ ORIZEENALS</span></div>
+            </div>
+            <input type="hidden" id="category" value="BREAKING"/>
+          </div>
+        </div>
         <div class="form-group" id="parentCatGroup" style="display:none">
           <label>↩️ Parent Category</label>
           <select id="parentCategory">
@@ -423,7 +254,7 @@
       </div>
 
       <div class="form-group">
-        <label>🖼 Custom Image URL (optional — uses article image if empty)</label>
+        <label>🖼 Custom Image URL (optional)</label>
         <input type="url" id="imageUrl" placeholder="https://i.ibb.co/..."/>
       </div>
 
@@ -432,41 +263,29 @@
         <label for="isFeatured">★ Mark as Featured Article</label>
       </div>
 
-      <button class="btn btn-green" id="publishBtn" onclick="startPublish()">
-        ⚡ Generate &amp; Publish
-      </button>
-
+      <button class="btn btn-green" onclick="startPublish()">⚡ Generate &amp; Publish</button>
       <button class="btn btn-ghost" onclick="doLogout()">Logout</button>
-
     </div>
 
-    <!-- PROGRESS LOG -->
     <div id="progressCard">
       <p class="progress-title">⚙️ Publishing in progress...</p>
       <div id="logItems"></div>
     </div>
 
-    <!-- RESULT -->
     <div id="resultCard">
       <div class="result-icon">✅</div>
       <div class="result-title">Published Successfully!</div>
       <div class="result-article-title" id="resultTitle"></div>
       <div class="result-links" id="resultLinks"></div>
-      <button class="btn btn-green" style="margin-top:0.5rem" onclick="resetPublish()">
-        Publish Another
-      </button>
+      <button class="btn btn-green" style="margin-top:0.5rem" onclick="resetPublish()">Publish Another</button>
     </div>
 
-    <!-- ERROR -->
     <div id="errorCard">
       <div class="result-icon">❌</div>
       <div class="error-title">Publishing Failed</div>
       <div class="error-msg" id="errorMsg"></div>
-      <button class="btn btn-ghost" style="margin-top:0.75rem" onclick="resetPublish()">
-        Try Again
-      </button>
+      <button class="btn btn-ghost" style="margin-top:0.75rem" onclick="resetPublish()">Try Again</button>
     </div>
-
   </div>
 
   <p class="publish-footer">
@@ -476,15 +295,19 @@
 
 <script src="config.js"></script>
 <script>
-  const API_URL = "https://orizeen-api.getorizeen.workers.dev";
+  const API_URL  = "https://orizeen-api.getorizeen.workers.dev";
   const SITE_URL = "https://theorizeentimes.getorizeen.workers.dev";
+  const CHANNEL_IDS = [
+    "6a126998c687a22dd41dd5db",
+    "6a1268c9c687a22dd41dd48a",
+    "6a1268aac687a22dd41dd441"
+  ];
   let publishPassword = '';
 
   // === LOGIN ===
   document.getElementById('publishPass').addEventListener('keydown', e => {
     if (e.key === 'Enter') checkPublishLogin();
   });
-
   function checkPublishLogin() {
     const pass = document.getElementById('publishPass').value;
     if (!pass) return;
@@ -492,53 +315,45 @@
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('publishPanel').style.display = 'flex';
   }
-
-  // Custom category dropdown
-const catSelect = document.getElementById('catSelect');
-const catTrigger = document.getElementById('catTrigger');
-const catDropdown = document.getElementById('catDropdown');
-const catBadgeDisplay = document.getElementById('catBadgeDisplay');
-const catHidden = document.getElementById('category');
-
-catTrigger.addEventListener('click', () => catSelect.classList.toggle('open'));
-document.addEventListener('click', e => {
-  if (!catSelect.contains(e.target)) catSelect.classList.remove('open');
-});
-document.querySelectorAll('.cat-option').forEach(opt => {
-  opt.addEventListener('click', () => {
-    const val = opt.dataset.value;
-    catHidden.value = val;
-    catBadgeDisplay.textContent = val === 'ORIZEENALS' ? '★ ORIZEENALS' : val;
-    catBadgeDisplay.className = `cat-badge ${val.toLowerCase()}`;
-    document.getElementById('parentCatGroup').style.display = val === 'BREAKING' ? 'block' : 'none';
-    catSelect.classList.remove('open');
-  });
-});
-
   function doLogout() {
     publishPassword = '';
     document.getElementById('publishPanel').style.display = 'none';
     document.getElementById('loginScreen').style.display = 'block';
     document.getElementById('publishPass').value = '';
-    document.getElementById('loginError').textContent = '';
   }
+
+  // === CUSTOM CATEGORY DROPDOWN ===
+  const catSelect = document.getElementById('catSelect');
+  const catTrigger = document.getElementById('catTrigger');
+  const catBadgeDisplay = document.getElementById('catBadgeDisplay');
+  const catHidden = document.getElementById('category');
+
+  catTrigger.addEventListener('click', () => catSelect.classList.toggle('open'));
+  document.addEventListener('click', e => {
+    if (!catSelect.contains(e.target)) catSelect.classList.remove('open');
+  });
+  document.querySelectorAll('.cat-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const val = opt.dataset.value;
+      catHidden.value = val;
+      catBadgeDisplay.textContent = val === 'ORIZEENALS' ? '★ ORIZEENALS' : val;
+      catBadgeDisplay.className = `cat-badge ${val.toLowerCase()}`;
+      document.getElementById('parentCatGroup').style.display = val === 'BREAKING' ? 'block' : 'none';
+      catSelect.classList.remove('open');
+    });
+  });
 
   // === LOGGING ===
   function addLog(icon, text, type = '') {
     const logItems = document.getElementById('logItems');
     const item = document.createElement('div');
     item.className = 'log-item';
-    item.innerHTML = `
-      <span class="log-icon">${icon}</span>
-      <span class="log-text ${type}">${text}</span>
-    `;
+    item.innerHTML = `<span class="log-icon">${icon}</span><span class="log-text ${type}">${text}</span>`;
     logItems.appendChild(item);
     item.scrollIntoView({ behavior: 'smooth' });
   }
-
   function updateLastLog(icon, text, type = '') {
-    const logItems = document.getElementById('logItems');
-    const last = logItems.lastElementChild;
+    const last = document.getElementById('logItems').lastElementChild;
     if (last) {
       last.querySelector('.log-icon').textContent = icon;
       last.querySelector('.log-text').textContent = text;
@@ -546,20 +361,16 @@ document.querySelectorAll('.cat-option').forEach(opt => {
     }
   }
 
-  // === MAIN PUBLISH FUNCTION ===
+  // === MAIN PUBLISH ===
   async function startPublish() {
-    const sourceUrl = document.getElementById('sourceUrl').value.trim();
-    const category = document.getElementById('category').value;
-    const parentCategory = document.getElementById('parentCategory').value;
-    const imageUrl = document.getElementById('imageUrl').value.trim();
-    const isFeatured = document.getElementById('isFeatured').checked;
+    const sourceUrl    = document.getElementById('sourceUrl').value.trim();
+    const category     = document.getElementById('category').value;
+    const parentCat    = document.getElementById('parentCategory').value;
+    const imageUrl     = document.getElementById('imageUrl').value.trim();
+    const isFeatured   = document.getElementById('isFeatured').checked;
 
-    if (!sourceUrl) {
-      alert('Please paste a news article URL.');
-      return;
-    }
+    if (!sourceUrl) { alert('Please paste a news article URL.'); return; }
 
-    // Show progress
     document.getElementById('formCard').style.display = 'none';
     document.getElementById('progressCard').style.display = 'flex';
     document.getElementById('resultCard').style.display = 'none';
@@ -567,155 +378,109 @@ document.querySelectorAll('.cat-option').forEach(opt => {
     document.getElementById('logItems').innerHTML = '';
 
     try {
-      // ── Step 1: Rewrite Article ──
+      // Step 1 — Rewrite
       addLog('⏳', 'Fetching and rewriting article with AI...');
-      const rewriteRes = await fetch(`${API_URL}/api/rewrite`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const rewriteRes  = await fetch(`${API_URL}/api/rewrite`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ source_url: sourceUrl, category })
       });
       const rewriteData = await rewriteRes.json();
       if (!rewriteData.success) throw new Error('Rewrite failed: ' + rewriteData.error);
-      updateLastLog('✅', `Article rewritten: "${rewriteData.article.title}"`, 'success');
-
       const article = rewriteData.article;
+      updateLastLog('✅', `Article rewritten: "${article.title}"`, 'success');
 
- // ── Step 2: Generate Photocard ──
-addLog('⏳', 'Generating photocard...');
-let finalImage = imageUrl || rewriteData.og_image || '';
-try {
-  const canvas = await generatePhotocard(article, category, rewriteData.og_image || imageUrl || '');
-  const uploadedUrl = await uploadToImgBB(canvas);
-  if (uploadedUrl) {
-    finalImage = uploadedUrl;
-    updateLastLog('✅', 'Photocard generated and uploaded', 'success');
-  } else {
-    updateLastLog('⚠️', 'imgBB upload failed — using original image', 'info');
-  }
-} catch(e) {
-  updateLastLog('⚠️', 'Photocard failed — using original image', 'info');
-  }
+      // Step 2 — Photocard
+      addLog('⏳', 'Generating branded photocard...');
+      let finalImage = imageUrl || rewriteData.og_image || '';
+      try {
+        const canvas      = await generatePhotocard(article, category, finalImage);
+        const uploadedUrl = await uploadToImgBB(canvas);
+        if (uploadedUrl) {
+          finalImage = uploadedUrl;
+          updateLastLog('✅', 'Photocard generated and uploaded', 'success');
+        } else {
+          updateLastLog('⚠️', 'imgBB upload failed — using original image', 'info');
+        }
+      } catch(e) {
+        updateLastLog('⚠️', 'Photocard failed — using original image', 'info');
+      }
 
-      // ── Step 3: Publish to Supabase ──
+      // Step 3 — Publish to Supabase
       addLog('⏳', 'Publishing article to website...');
-
-      // Unfeature others if featured
       if (isFeatured) {
         await fetch(`${SUPABASE_URL}/rest/v1/articles?featured=eq.true`, {
           method: 'PATCH',
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json'
-          },
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ featured: false })
         });
       }
-
       const breaking_until = category === 'BREAKING'
-        ? new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
-        : null;
+        ? new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() : null;
 
-      const supabaseRes = await fetch(`${SUPABASE_URL}/rest/v1/articles`, {
+      const supabaseRes  = await fetch(`${SUPABASE_URL}/rest/v1/articles`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=representation'
+          'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json', 'Prefer': 'return=representation'
         },
         body: JSON.stringify({
-  title: article.title,
-  excerpt: article.excerpt,
-  content: article.content,
-  location: article.location,
-  author: article.author,
-  news_date: new Date().toISOString().split('T')[0],
-  category: category,
-          parent_category: category === 'BREAKING' ? parentCategory : null,
-          breaking_until,
-          featured: isFeatured,
+          title: article.title, excerpt: article.excerpt,
+          content: article.content, location: article.location,
+          author: article.author, category,
+          parent_category: category === 'BREAKING' ? parentCat : null,
+          breaking_until, featured: isFeatured,
           image_url: finalImage,
+          news_date: new Date().toISOString().split('T')[0],
           source_url: sourceUrl,
-          source_name: (() => { try { return new URL(sourceUrl).hostname.replace('www.',''); } catch(e) { return ''; } })(),
+          source_name: (() => { try { return new URL(sourceUrl).hostname.replace('www.',''); } catch(e) { return ''; }})(),
           published: true
         })
       });
-
       const supabaseData = await supabaseRes.json();
       if (!supabaseRes.ok) throw new Error('Supabase failed: ' + JSON.stringify(supabaseData));
       const articleId = supabaseData[0]?.id;
-      updateLastLog('✅', `Published to website — Article #${articleId}`, 'success');
+      updateLastLog('✅', `Published — Article #${articleId}`, 'success');
 
-      // ── Step 4: Shorten URL ──
+      // Step 4 — Shorten URL
       addLog('⏳', 'Shortening URL with Bitly...');
       const longUrl = `${SITE_URL}/article?id=${articleId}`;
-      let shortUrl = longUrl;
+      let shortUrl  = longUrl;
       try {
-        const bitlyRes = await fetch(`${API_URL}/api/shorten`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const bitlyRes  = await fetch(`${API_URL}/api/shorten`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ url: longUrl })
         });
         const bitlyData = await bitlyRes.json();
         if (bitlyData.short) shortUrl = bitlyData.short;
         updateLastLog('✅', `URL shortened: ${shortUrl}`, 'success');
-      } catch(e) {
-        updateLastLog('⚠️', 'Bitly failed — using full URL', 'info');
-      }
+      } catch(e) { updateLastLog('⚠️', 'Bitly failed — using full URL', 'info'); }
 
-      // ── Step 5: Generate AI Caption ──
-      addLog('⏳', 'Generating social media caption with AI...');
+      // Step 5 — AI Caption
+      addLog('⏳', 'Generating social media caption...');
       let caption = `${article.title}\n\n${article.excerpt}\n\n🔗 ${shortUrl}`;
       try {
-        const captionRes = await fetch(`${API_URL}/api/caption`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: article.title,
-            excerpt: article.excerpt,
-            category,
-            short_url: shortUrl
-          })
+        const capRes  = await fetch(`${API_URL}/api/caption`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: article.title, excerpt: article.excerpt, category, short_url: shortUrl })
         });
-        const captionData = await captionRes.json();
-        if (captionData.caption) {
-          caption = captionData.caption;
-          updateLastLog('✅', 'AI caption generated', 'success');
-        } else {
-          updateLastLog('⚠️', 'AI caption failed — using default', 'info');
-        }
-      } catch(e) {
-        updateLastLog('⚠️', 'AI caption failed — using default', 'info');
-      }
+        const capData = await capRes.json();
+        if (capData.caption) { caption = capData.caption; updateLastLog('✅', 'AI caption generated', 'success'); }
+        else updateLastLog('⚠️', 'AI caption failed — using default', 'info');
+      } catch(e) { updateLastLog('⚠️', 'AI caption failed — using default', 'info'); }
 
-      // ── Step 6: Post to Buffer ──
+      // Step 6 — Buffer
       addLog('⏳', 'Posting to X, Facebook and Threads...');
-      const CHANNEL_IDS = [
-        "6a126998c687a22dd41dd5db",
-        "6a1268c9c687a22dd41dd48a",
-        "6a1268aac687a22dd41dd441",
-      ];
       try {
-        const bufferRes = await fetch(`${API_URL}/api/post`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const bufRes  = await fetch(`${API_URL}/api/post`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ caption, channelIds: CHANNEL_IDS })
         });
-        const bufferData = await bufferRes.json();
-        if (bufferData.success) {
-          updateLastLog('✅', 'Posted to X, Facebook and Threads', 'success');
-        } else {
-          updateLastLog('⚠️', 'Buffer posting failed — check manually', 'info');
-        }
-      } catch(e) {
-        updateLastLog('⚠️', 'Buffer posting failed — check manually', 'info');
-      }
+        const bufData = await bufRes.json();
+        if (bufData.success) updateLastLog('✅', 'Posted to X, Facebook and Threads', 'success');
+        else updateLastLog('⚠️', 'Buffer posting failed — check manually', 'info');
+      } catch(e) { updateLastLog('⚠️', 'Buffer posting failed — check manually', 'info'); }
 
-      // ── Done ──
       addLog('🎉', 'All done!', 'success');
-
-      // Show result
       setTimeout(() => {
         document.getElementById('progressCard').style.display = 'none';
         document.getElementById('resultCard').style.display = 'flex';
@@ -734,216 +499,7 @@ try {
     }
   }
 
-  // === PHOTOCARD ===
-
-function roundRect(ctx, x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.lineTo(x + w - r, y);
-  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-  ctx.lineTo(x + w, y + h - r);
-  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-  ctx.lineTo(x + r, y + h);
-  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-  ctx.lineTo(x, y + r);
-  ctx.quadraticCurveTo(x, y, x + r, y);
-  ctx.closePath();
-}
-
-function loadImage(src) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => resolve(img);
-    img.onerror = () => resolve(null);
-    img.src = src;
-  });
-}
-
-async function generatePhotocard(article, category, imageUrl) {
-  const SIZE = 1080;
-  const canvas = document.createElement('canvas');
-  canvas.width = SIZE;
-  canvas.height = SIZE;
-  const ctx = canvas.getContext('2d');
-
-  const CAT_STYLES = {
-    BREAKING:  { bg: '#E8302A', text: '#fff' },
-    POLITICS:  { bg: '#145A32', text: '#fff' },
-    WORLD:     { bg: '#1C3A5E', text: '#fff' },
-    TECH:      { bg: '#0E6655', text: '#1DB954' },
-    BUSINESS:  { bg: '#C9A84C', text: '#000' },
-    SPORTS:    { bg: '#1DB954', text: '#000' },
-    CULTURE:   { bg: '#4A235A', text: '#E8C9F5' },
-    SCIENCE:   { bg: '#117A65', text: '#fff' },
-    OPINION:   { bg: '#333', text: '#fff' },
-    ORIZEENALS:{ bg: '#111', text: '#C9A84C' },
-  };
-  const cat = CAT_STYLES[category] || CAT_STYLES.WORLD;
-
-  ctx.fillStyle = '#0A0A0A';
-  ctx.fillRect(0, 0, SIZE, SIZE);
-
-  const imgH = 588;
-  const imgY = 88;
-  const imgPad = 24;
-  const imgW = SIZE - imgPad * 2;
-  const imgRadius = 22;
-
-  if (imageUrl) {
-    const img = await loadImage(imageUrl);
-    if (img) {
-      ctx.save();
-      roundRect(ctx, imgPad, imgY, imgW, imgH, imgRadius);
-      ctx.clip();
-      const scale = Math.max(imgW / img.width, imgH / img.height);
-      const sw = img.width * scale;
-      const sh = img.height * scale;
-      const sx = imgPad + (imgW - sw) / 2;
-      const sy = imgY + (imgH - sh) / 2;
-      ctx.drawImage(img, sx, sy, sw, sh);
-      ctx.restore();
-    }
-  } else {
-    ctx.fillStyle = '#1A1A1A';
-    roundRect(ctx, imgPad, imgY, imgW, imgH, imgRadius);
-    ctx.fill();
-    ctx.fillStyle = 'rgba(201,168,76,0.15)';
-    ctx.font = 'bold 28px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('ORIZEEN Times', SIZE / 2, imgY + imgH / 2);
-    ctx.textAlign = 'left';
-  }
-
-  // Logo pill
-  ctx.save();
-  ctx.fillStyle = '#1A1508';
-  ctx.strokeStyle = '#C9A84C';
-  ctx.lineWidth = 1.5;
-  roundRect(ctx, 28, 22, 220, 52, 26);
-  ctx.fill();
-  ctx.stroke();
-  ctx.restore();
-
-  ctx.font = 'bold 20px Arial';
-  ctx.fillStyle = '#C9A84C';
-  ctx.fillText('ORIZEEN', 52, 53);
-  const orW = ctx.measureText('ORIZEEN ').width;
-  ctx.font = 'italic 18px Arial';
-  ctx.fillStyle = '#C9A84C';
-  ctx.fillText('Times', 52 + orW, 53);
-
-  // Category badge
-  ctx.font = 'bold 18px Arial';
-  const catW = ctx.measureText(category).width + 40;
-  const catX = SIZE - catW - 28;
-  ctx.save();
-  ctx.fillStyle = cat.bg;
-  ctx.shadowColor = cat.bg;
-  ctx.shadowBlur = 12;
-  roundRect(ctx, catX, 22, catW, 52, 26);
-  ctx.fill();
-  ctx.restore();
-  ctx.fillStyle = cat.text;
-  ctx.font = 'bold 18px Arial';
-  ctx.textAlign = 'center';
-  ctx.fillText(category, catX + catW / 2, 53);
-  ctx.textAlign = 'left';
-
-  // Headline
-  const hlY = imgY + imgH + 20;
-  const hlMaxW = SIZE - 60;
-  const hlX = 30;
-
-  let fontSize = 78;
-  ctx.font = `bold ${fontSize}px Arial`;
-  let words = article.title.split(' ');
-  let lines = [];
-  let line = '';
-  for (const word of words) {
-    const test = line + (line ? ' ' : '') + word;
-    if (ctx.measureText(test).width > hlMaxW) {
-      if (line) lines.push(line);
-      line = word;
-    } else { line = test; }
-  }
-  if (line) lines.push(line);
-
-  if (lines.length > 3) fontSize = 62;
-  if (lines.length > 4) fontSize = 50;
-
-  ctx.font = `bold ${fontSize}px Arial`;
-  lines = [];
-  line = '';
-  for (const word of words) {
-    const test = line + (line ? ' ' : '') + word;
-    if (ctx.measureText(test).width > hlMaxW) {
-      if (line) lines.push(line);
-      line = word;
-    } else { line = test; }
-  }
-  if (line) lines.push(line);
-
-  const lineH = fontSize * 1.2;
-  const totalTextH = lines.length * lineH;
-  const availH = SIZE - 80 - hlY;
-  const startY = hlY + (availH - totalTextH) / 2 + fontSize;
-
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = `bold ${fontSize}px Arial`;
-  lines.forEach((l, i) => ctx.fillText(l, hlX, startY + i * lineH));
-
-  // Footer
-  const footerH = 80;
-  const footerY = SIZE - footerH;
-  ctx.fillStyle = 'rgba(0,0,0,0.6)';
-  ctx.fillRect(0, footerY, SIZE, footerH);
-  ctx.strokeStyle = 'rgba(201,168,76,0.4)';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(0, footerY);
-  ctx.lineTo(SIZE, footerY);
-  ctx.stroke();
-
-  ctx.font = '300 16px Arial';
-  ctx.fillStyle = 'rgba(255,255,255,0.45)';
-  ctx.fillText('a concern of The ORIZEEN Media Technologies', 28, footerY + 28);
-  ctx.font = '500 15px Arial';
-  ctx.fillStyle = 'rgba(255,255,255,0.55)';
-  ctx.fillText('@theorizeentimes', 28, footerY + 58);
-
-  ctx.textAlign = 'right';
-  ctx.font = '300 14px Arial';
-  ctx.fillStyle = 'rgba(255,255,255,0.35)';
-  try {
-    const host = new URL(document.getElementById('sourceUrl').value).hostname.replace('www.','');
-    ctx.fillText('Source: ' + host, SIZE - 28, footerY + 28);
-  } catch(e) {}
-  ctx.fillText('© ORIZEEN Times ' + new Date().getFullYear(), SIZE - 28, footerY + 58);
-  ctx.textAlign = 'left';
-
-  return canvas;
-}
-
-async function uploadToImgBB(canvas) {
-  return new Promise((resolve) => {
-    canvas.toBlob(async (blob) => {
-      try {
-        const key = typeof IMGBB_KEY !== 'undefined' ? IMGBB_KEY : '';
-        if (!key) { resolve(null); return; }
-        const formData = new FormData();
-        formData.append('image', blob, 'photocard.png');
-        const res = await fetch(`https://api.imgbb.com/1/upload?key=${key}`, {
-          method: 'POST',
-          body: formData
-        });
-        const data = await res.json();
-        resolve(data.success ? data.data.url : null);
-      } catch(e) { resolve(null); }
-    }, 'image/png', 0.95);
-  });
-    }
-  
+  // === RESET ===
   function resetPublish() {
     document.getElementById('formCard').style.display = 'flex';
     document.getElementById('progressCard').style.display = 'none';
@@ -953,10 +509,206 @@ async function uploadToImgBB(canvas) {
     document.getElementById('sourceUrl').value = '';
     document.getElementById('imageUrl').value = '';
     document.getElementById('isFeatured').checked = false;
-    document.getElementById('category').value = 'BREAKING';
+    catHidden.value = 'BREAKING';
+    catBadgeDisplay.textContent = 'BREAKING';
+    catBadgeDisplay.className = 'cat-badge breaking';
     document.getElementById('parentCatGroup').style.display = 'none';
   }
-</script>
 
+  // === HELPERS ===
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x+r, y); ctx.lineTo(x+w-r, y);
+    ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+    ctx.lineTo(x+w, y+h-r);
+    ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+    ctx.lineTo(x+r, y+h);
+    ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+    ctx.lineTo(x, y+r);
+    ctx.quadraticCurveTo(x, y, x+r, y);
+    ctx.closePath();
+  }
+
+  function loadImage(src) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload  = () => resolve(img);
+      img.onerror = () => resolve(null);
+      img.src = src;
+    });
+  }
+
+  // === PHOTOCARD ===
+  const CAT_STYLES = {
+    BREAKING:  { bg: '#E8302A', text: '#fff' },
+    POLITICS:  { bg: '#145A32', text: '#fff' },
+    WORLD:     { bg: '#1C3A5E', text: '#fff' },
+    TECH:      { bg: '#0E6655', text: '#1DB954' },
+    BUSINESS:  { bg: '#C9A84C', text: '#000' },
+    SPORTS:    { bg: '#1DB954', text: '#000' },
+    CULTURE:   { bg: '#4A235A', text: '#E8C9F5' },
+    SCIENCE:   { bg: '#117A65', text: '#fff' },
+    OPINION:   { bg: '#333',    text: '#fff' },
+    ORIZEENALS:{ bg: '#111',    text: '#C9A84C' },
+  };
+
+  async function generatePhotocard(article, category, imageUrl) {
+    const SIZE = 1080;
+    const canvas = document.createElement('canvas');
+    canvas.width  = SIZE;
+    canvas.height = SIZE;
+    const ctx = canvas.getContext('2d');
+    const cat = CAT_STYLES[category] || CAT_STYLES.WORLD;
+
+    // Black background
+    ctx.fillStyle = '#0A0A0A';
+    ctx.fillRect(0, 0, SIZE, SIZE);
+
+    // Image zone
+    const imgPad = 24, imgY = 88, imgRadius = 22;
+    const imgW = SIZE - imgPad * 2;
+    const imgH = 588; // 58% height
+
+    if (imageUrl) {
+      const img = await loadImage(imageUrl);
+      if (img) {
+        ctx.save();
+        roundRect(ctx, imgPad, imgY, imgW, imgH, imgRadius);
+        ctx.clip();
+        // cover-fit
+        const scale = Math.max(imgW / img.width, imgH / img.height);
+        const sw = img.width * scale, sh = img.height * scale;
+        const sx = imgPad + (imgW - sw) / 2, sy = imgY + (imgH - sh) / 2;
+        ctx.drawImage(img, sx, sy, sw, sh);
+        ctx.restore();
+      } else {
+        // Fallback dark placeholder
+        ctx.fillStyle = '#1A1A1A';
+        roundRect(ctx, imgPad, imgY, imgW, imgH, imgRadius);
+        ctx.fill();
+      }
+    } else {
+      ctx.fillStyle = '#1A1A1A';
+      roundRect(ctx, imgPad, imgY, imgW, imgH, imgRadius);
+      ctx.fill();
+    }
+
+    // Logo pill (top left)
+    ctx.save();
+    ctx.fillStyle = '#1A1508';
+    ctx.strokeStyle = '#C9A84C';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, 28, 22, 220, 52, 26);
+    ctx.fill(); ctx.stroke();
+    ctx.restore();
+    ctx.font = 'bold 20px Arial';
+    ctx.fillStyle = '#C9A84C';
+    ctx.fillText('ORIZEEN', 52, 53);
+    const orW = ctx.measureText('ORIZEEN ').width;
+    ctx.font = 'italic 18px Arial';
+    ctx.fillText('Times', 52 + orW, 53);
+
+    // Category badge (top right)
+    ctx.font = 'bold 18px Arial';
+    const catLabel = category === 'ORIZEENALS' ? '★ ORIZEENALS' : category;
+    const catW = ctx.measureText(catLabel).width + 40;
+    const catX = SIZE - catW - 28;
+    ctx.save();
+    ctx.fillStyle = cat.bg;
+    ctx.shadowColor = cat.bg;
+    ctx.shadowBlur = 14;
+    roundRect(ctx, catX, 22, catW, 52, 26);
+    ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = cat.text;
+    ctx.font = 'bold 18px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(catLabel, catX + catW / 2, 53);
+    ctx.textAlign = 'left';
+
+    // Headline
+    const hlY    = imgY + imgH + 20;
+    const hlMaxW = SIZE - 60;
+    const hlX    = 30;
+    let fontSize = 78;
+
+    const buildLines = (fs) => {
+      ctx.font = `bold ${fs}px Arial`;
+      const wds = article.title.split(' ');
+      const ls = [];
+      let ln = '';
+      for (const w of wds) {
+        const t = ln + (ln ? ' ' : '') + w;
+        if (ctx.measureText(t).width > hlMaxW) { if (ln) ls.push(ln); ln = w; }
+        else ln = t;
+      }
+      if (ln) ls.push(ln);
+      return ls;
+    };
+
+    let lines = buildLines(fontSize);
+    if (lines.length > 3) { fontSize = 62; lines = buildLines(fontSize); }
+    if (lines.length > 4) { fontSize = 50; lines = buildLines(fontSize); }
+
+    const lineH      = fontSize * 1.2;
+    const totalTextH = lines.length * lineH;
+    const availH     = SIZE - 80 - hlY;
+    const startY     = hlY + (availH - totalTextH) / 2 + fontSize;
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = `bold ${fontSize}px Arial`;
+    lines.forEach((l, i) => ctx.fillText(l, hlX, startY + i * lineH));
+
+    // Footer
+    const footerH = 80, footerY = SIZE - footerH;
+    ctx.fillStyle = 'rgba(0,0,0,0.65)';
+    ctx.fillRect(0, footerY, SIZE, footerH);
+    ctx.strokeStyle = 'rgba(201,168,76,0.4)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, footerY); ctx.lineTo(SIZE, footerY); ctx.stroke();
+
+    // Left: tagline + handle
+    ctx.font = '300 15px Arial';
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.fillText('a concern of The ORIZEEN Media Technologies', 28, footerY + 26);
+    ctx.font = '500 15px Arial';
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.fillText('@theorizeentimes  ·  X  ·  Facebook  ·  Threads', 28, footerY + 56);
+
+    // Right: source + copyright
+    ctx.textAlign = 'right';
+    ctx.font = '300 14px Arial';
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    try {
+      const host = new URL(document.getElementById('sourceUrl').value).hostname.replace('www.','');
+      ctx.fillText('Source: ' + host, SIZE - 28, footerY + 26);
+    } catch(e) {}
+    ctx.fillText('© ORIZEEN Times ' + new Date().getFullYear(), SIZE - 28, footerY + 56);
+    ctx.textAlign = 'left';
+
+    return canvas;
+  }
+
+  async function uploadToImgBB(canvas) {
+    return new Promise((resolve) => {
+      canvas.toBlob(async (blob) => {
+        try {
+          const key = typeof IMGBB_KEY !== 'undefined' ? IMGBB_KEY : '';
+          if (!key) { resolve(null); return; }
+          const formData = new FormData();
+          formData.append('image', blob, 'photocard.png');
+          const res  = await fetch(`https://api.imgbb.com/1/upload?key=${key}`, {
+            method: 'POST', body: formData
+          });
+          const data = await res.json();
+          resolve(data.success ? data.data.url : null);
+        } catch(e) { resolve(null); }
+      }, 'image/png', 0.95);
+    });
+  }
+
+</script>
 </body>
 </html>
