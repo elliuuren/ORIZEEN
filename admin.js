@@ -381,3 +381,62 @@ async function postToBuffer({ id, title, excerpt, image_url }) {
 
   console.log("✅ Posted to all platforms");
 }
+
+// === AUTO PUBLISH TOGGLE ===
+async function loadAutoPublishStatus() {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/settings?key=eq.auto_publish&select=value`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+    );
+    const data = await res.json();
+    const isOn = data[0]?.value === 'true';
+    document.getElementById('autoPublishToggle').checked = isOn;
+    document.getElementById('autoStatusLabel').textContent = isOn ? 'Status: 🟢 Active' : 'Status: ⚫ Inactive';
+    updateToggleStyle(isOn);
+  } catch(e) {
+    document.getElementById('autoStatusLabel').textContent = 'Status: Error loading';
+  }
+}
+
+function updateToggleStyle(isOn) {
+  const slider = document.getElementById('toggleSlider');
+  const knob = document.getElementById('toggleKnob');
+  slider.style.background = isOn ? '#1DB954' : '#333';
+  knob.style.transform = isOn ? 'translateX(28px)' : 'translateX(0)';
+}
+
+async function toggleAutoPublish() {
+  const isOn = document.getElementById('autoPublishToggle').checked;
+  const msgEl = document.getElementById('autoMsg');
+  msgEl.style.color = '#C9A84C';
+  msgEl.textContent = 'Saving...';
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/settings?key=eq.auto_publish`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ value: isOn ? 'true' : 'false' })
+    });
+    document.getElementById('autoStatusLabel').textContent = isOn ? 'Status: 🟢 Active' : 'Status: ⚫ Inactive';
+    updateToggleStyle(isOn);
+    msgEl.style.color = '#1DB954';
+    msgEl.textContent = isOn ? '✅ Autonomous publishing enabled' : '⚫ Autonomous publishing disabled';
+    setTimeout(() => msgEl.textContent = '', 3000);
+  } catch(e) {
+    msgEl.style.color = '#C0392B';
+    msgEl.textContent = 'Error saving — try again';
+  }
+}
+
+// Load auto status when admin panel opens
+const origObserver = new MutationObserver(() => {
+  const panel = document.getElementById('adminPanel');
+  if (panel && panel.style.display !== 'none') loadAutoPublishStatus();
+});
+if (document.getElementById('adminPanel')) {
+  origObserver.observe(document.getElementById('adminPanel'), { attributes: true, attributeFilter: ['style'] });
+}
