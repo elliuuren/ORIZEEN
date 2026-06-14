@@ -48,6 +48,13 @@ async function loadArticle() {
   const a = data[0];
   document.title = `${a.title} — ORIZEEN Times`;
 
+// Set dynamic OG image for social link previews
+if (a.image_url) {
+  document.querySelector('meta[property="og:image"]')?.setAttribute('content', a.image_url);
+  document.querySelector('meta[name="twitter:image"]')?.setAttribute('content', a.image_url);
+  document.querySelector('meta[property="og:title"]')?.setAttribute('content', a.title);
+}
+
   // Convert double line breaks to paragraphs
   const bodyHtml = a.content
     .split(/\n\n+/)
